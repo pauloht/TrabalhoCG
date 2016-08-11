@@ -68,10 +68,12 @@ public class Map {
      */
     public static Matrix getIdealMapping(List< Polygon > cena,Double UMax, Double UMin,Double VMax, Double VMin)
     {
-        Double XMax = 0.00;
-        Double XMin = 0.00;
-        Double YMax = 0.00;
-        Double YMin = 0.00;
+        Double XMax = null;
+        Double XMin = null;
+        Double YMax = null;
+        Double YMin = null;
+        
+        boolean primeiraVez = true;
         
         for (Polygon poly : cena)
         {
@@ -87,46 +89,73 @@ public class Map {
                 Double x_vertex_fim = vertex_fim.getPos_x();
                 Double y_vertex_fim = vertex_fim.getPos_y();
                 
-                if (x_vertex_inicio > XMax)
+                if (primeiraVez)
                 {
-                    XMax = x_vertex_inicio;
+                    if (x_vertex_inicio > x_vertex_fim)
+                    {
+                        XMax = x_vertex_inicio;
+                        XMin = x_vertex_fim;
+                    }
+                    else
+                    {
+                        XMax = x_vertex_fim;
+                        XMin = x_vertex_inicio;
+                    }
+                    
+                    if (y_vertex_inicio > y_vertex_fim)
+                    {
+                        YMax = y_vertex_inicio;
+                        YMin = y_vertex_fim;
+                    }
+                    else
+                    {
+                        YMax = y_vertex_fim;
+                        YMin = y_vertex_inicio;
+                    }
+                    primeiraVez = false;
                 }
-                
-                if (x_vertex_inicio < XMin)
+                else
                 {
-                    XMin = x_vertex_inicio;
+                    if (x_vertex_inicio > XMax)
+                    {
+                        XMax = x_vertex_inicio;
+                    }
+
+                    if (x_vertex_inicio < XMin)
+                    {
+                        XMin = x_vertex_inicio;
+                    }
+
+                    if (y_vertex_inicio > YMax)
+                    {
+                        YMax = y_vertex_inicio;
+                    }
+
+                    if (y_vertex_inicio < YMin)
+                    {
+                        YMin = y_vertex_inicio;
+                    }
+
+                    if (x_vertex_fim > XMax)
+                    {
+                        XMax = x_vertex_fim;
+                    }
+
+                    if (x_vertex_fim < XMin)
+                    {
+                        XMin = x_vertex_fim;
+                    }
+
+                    if (y_vertex_fim > YMax)
+                    {
+                        YMax = y_vertex_fim;
+                    }
+
+                    if (y_vertex_fim < YMin)
+                    {
+                        YMin = y_vertex_fim;
+                    }
                 }
-                
-                if (y_vertex_inicio > YMax)
-                {
-                    YMax = y_vertex_inicio;
-                }
-                
-                if (y_vertex_inicio < YMin)
-                {
-                    YMin = y_vertex_inicio;
-                }
-                
-                if (x_vertex_fim > XMax)
-                {
-                    XMax = x_vertex_fim;
-                }
-                
-                if (x_vertex_fim < XMin)
-                {
-                    XMin = x_vertex_fim;
-                }
-                
-                if (y_vertex_fim > YMax)
-                {
-                    YMax = y_vertex_fim;
-                }
-                
-                if (y_vertex_fim < YMin)
-                {
-                    YMin = y_vertex_fim;
-                }
-                
             }
         }
         /*
@@ -142,11 +171,11 @@ public class Map {
         YMax = YMax + valorAjustavel;
         YMin = YMin - valorAjustavel;
         
-        /*
+        
         System.out.println("APAGAR DEPOIS EM MAP AJUSTADO\n "
         + "XMax = " + XMax + ", XMin = " + XMin + ",YMax = " + YMax + ",YMin = " + YMin + "\n"
         + "UMax = " + UMax + ", UMin = " + UMin + ",VMax = " + VMax + ",VMin = " + VMin  + "\n");
-        */
+        
         
         System.out.println("XMax-Xmin = " + (XMax-XMin) + "YMax-YMin = " + (YMax-YMin));
         

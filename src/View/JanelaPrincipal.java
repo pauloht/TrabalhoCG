@@ -119,15 +119,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
         Matrix depoisProjecaoFrontal = frontProjecao.multiplicacaoMatrix(poly.get3DVertexMatrix());
         frontPolygon.set3DVertexMatrix(depoisProjecaoFrontal);
-        System.out.println("frontMatrix = " + depoisProjecaoFrontal);
+        System.out.println("frontMatrix = " + frontPolygon.get3DVertexMatrix());
         
         Matrix depoisProjecaoTopo = topProjecao.multiplicacaoMatrix(poly.get3DVertexMatrix());
         topPolygon.set3DVertexMatrix(depoisProjecaoTopo);
-        System.out.println("topMatrix = " + depoisProjecaoTopo);
+        System.out.println("topMatrix = " + topPolygon.get3DVertexMatrix());
         
         Matrix depoisProjecaoLado = sideProjecao.multiplicacaoMatrix(poly.get3DVertexMatrix());
         sidePolygon.set3DVertexMatrix(depoisProjecaoLado);
-        System.out.println("ladoMatrix = " + depoisProjecaoLado);
+        System.out.println("ladoMatrix = " + sidePolygon.get3DVertexMatrix());
 
         //front
         Matrix frontMatrix = Pipeline.Matrix3Dto2D.Transform.retirarZ( frontPolygon.get3DVertexMatrix() );
