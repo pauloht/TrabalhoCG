@@ -18,7 +18,18 @@ public class Map {
      */
     private static final double PRESCISSAO = 0.00001;
     
-    private static Matrix getMappingMatrix(Double XMax,Double XMin,Double YMax,Double YMin,Double UMax,Double UMin,Double VMax,Double VMin)
+    
+    
+    private static Double XMax = 0.00;
+    private static Double XMin = 0.00;
+    private static Double YMax = 0.00;
+    private static Double YMin = 0.00;
+    
+    private static Double valorAjustavel = 0.00;
+    
+    
+    
+    public static Matrix getMappingMatrix(Double UMax,Double UMin,Double VMax,Double VMin)
     {
         Double razao_larguras;
         if (Math.abs(XMax - XMin) > PRESCISSAO)
@@ -60,19 +71,10 @@ public class Map {
      * Tenta achar valores "interessantes" para plano de mapeamento da cena
      * Tentar achar um valor bom para variavel valorAjustavel(dependendo do contesto um valor bom mudaria, achar essa regra)
      * @param cena conjunto de poligonos
-     * @param UMax maior Hozintal da tela
-     * @param UMin menor Horizontal da tela
-     * @param VMax maior Vertical da tela
-     * @param VMin menor Vertical da tela
-     * @return 
+     * @return vetor de Double de tamanho 2 onde na posicao 0 esta o comprimento da cena e na posicao 1 a altura
      */
-    public static Matrix getIdealMapping(List< Polygon > cena,Double UMax, Double UMin,Double VMax, Double VMin)
+    public static Double[] setNiceParametros(List< Polygon > cena)
     {
-        Double XMax = null;
-        Double XMin = null;
-        Double YMax = null;
-        Double YMin = null;
-        
         boolean primeiraVez = true;
         
         for (Polygon poly : cena)
@@ -164,8 +166,6 @@ public class Map {
                 + "UMax = " + UMax + ", UMin = " + UMin + ",VMax = " + VMax + ",VMin = " + VMin  + "\n");
         */
         
-        Double valorAjustavel = 0.00;
-        
         XMax = XMax + valorAjustavel;
         XMin = XMin - valorAjustavel;
         YMax = YMax + valorAjustavel;
@@ -173,13 +173,20 @@ public class Map {
         
         
         System.out.println("APAGAR DEPOIS EM MAP AJUSTADO\n "
-        + "XMax = " + XMax + ", XMin = " + XMin + ",YMax = " + YMax + ",YMin = " + YMin + "\n"
-        + "UMax = " + UMax + ", UMin = " + UMin + ",VMax = " + VMax + ",VMin = " + VMin  + "\n");
+        + "XMax = " + XMax + ", XMin = " + XMin + ",YMax = " + YMax + ",YMin = " + YMin + "\n" );
         
         
         System.out.println("XMax-Xmin = " + (XMax-XMin) + "YMax-YMin = " + (YMax-YMin));
         
-        return( getMappingMatrix(XMax, XMin, YMax, YMin, UMax, UMin, VMax, VMin) );
-    
+        Double comprimento = (XMax-XMin);
+        Double altura = (YMax-YMin);
+        
+        Double[] retorno = new Double[2];
+        retorno[0] = comprimento;
+        retorno[1] = altura;
+
+        System.out.println("VALORES SETADOS");
+        
+        return(retorno);
     }
 }

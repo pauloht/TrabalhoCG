@@ -111,7 +111,46 @@ public class MyJPanel extends JPanel{
     {
         List< Polygon > lista = new ArrayList<>();
         lista.add(otherpoly);
-        Matrix operacao_mapeamento = Pipeline.Mapeamento.Map.getIdealMapping(lista, this.getSize().width + 0.00, 0.00, this.getSize().height + 0.00, 0.00);
+        Double[] medidas;
+        medidas = Pipeline.Mapeamento.Map.setNiceParametros(lista);
+        
+        Double comprimento = medidas[0];
+        Double altura = medidas[1];
+        
+        Double comprimentoNoPanel;
+        Double alturaNoPanel;
+        
+        Double comprimentoMaximo = this.getSize().width + 0.00;
+        Double alturaMaximo = this.getSize().height + 0.00;
+        
+        Double sobraNoComprimento;
+        Double sobraNaAltura;
+        
+        Double razaoNoMundo = comprimento/altura;
+        Double razaoNoPanel = comprimentoMaximo/alturaMaximo;
+        
+        if (comprimentoMaximo > alturaMaximo)
+        {
+            alturaNoPanel = alturaMaximo;
+            comprimentoNoPanel = comprimento*alturaMaximo/altura;
+        }
+        else
+        {
+            comprimentoNoPanel = comprimentoMaximo;
+            alturaNoPanel = altura*comprimentoMaximo/comprimento;
+        }
+        
+        sobraNoComprimento = comprimentoMaximo - comprimentoNoPanel;
+        sobraNaAltura = alturaMaximo - alturaNoPanel;
+        
+        
+        
+        System.out.println("comprimento = " + comprimento + ",altura = " + altura + "\n" +
+                           "No panel comprimentoMaximo = " + comprimentoMaximo + ",Altura maxima = " + alturaMaximo + "\n" +
+                            "No panel comprimento = " + comprimentoNoPanel + ",altura = " + alturaNoPanel + "\n" +
+                             "Sobra comprimento = " + sobraNoComprimento + ",sobra altura = " + sobraNaAltura);
+        
+        Matrix operacao_mapeamento = Pipeline.Mapeamento.Map.getMappingMatrix( comprimentoMaximo - Math.floor(sobraNoComprimento/2.00), Math.floor(sobraNoComprimento/2.00), this.getSize().height - Math.floor(sobraNaAltura/2.00), Math.floor(sobraNaAltura/2.00) );
         Matrix depois_mapeamento = operacao_mapeamento.multiplicacaoMatrix( otherpoly.get2DVertexMatrix() );
         System.out.println("No panel " + nome + " depois do mapeamento = " + depois_mapeamento);
         otherpoly.set2DVertexMatrix(depois_mapeamento);
