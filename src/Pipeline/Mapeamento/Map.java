@@ -21,16 +21,24 @@ public class Map {
     
     
     
-    private static Double XMax = 0.00;
-    private static Double XMin = 0.00;
-    private static Double YMax = 0.00;
-    private static Double YMin = 0.00;
+    public Double XMax = 0.00;
+    public Double XMin = 0.00;
+    public Double YMax = 0.00;
+    public Double YMin = 0.00;
+    
+    public Double UMax = 0.00;
+    public Double UMin = 0.00;
+    public Double VMax = 0.00;
+    public Double VMin = 0.00;
     
     private static Double valorAjustavel = 0.00;
     
+    public Map()
+    {
+        
+    }
     
-    
-    public static Matrix getMappingMatrix(Double UMax,Double UMin,Double VMax,Double VMin)
+    public Matrix getMappingMatrix()
     {
         Double razao_larguras;
         if (Math.abs(XMax - XMin) > PRESCISSAO)
@@ -74,7 +82,7 @@ public class Map {
      * @param cena conjunto de poligonos
      * @return vetor de Double de tamanho 2 onde na posicao 0 esta o comprimento da cena e na posicao 1 a altura
      */
-    public static Double[] setNiceParametros(List< Polygon > cena)
+    public Double[] setNiceParametros(List< Polygon > cena)
     {
         boolean primeiraVez = true;
         
@@ -173,12 +181,14 @@ public class Map {
         YMin = YMin - valorAjustavel;
         
         
+        /*
         System.out.println("APAGAR DEPOIS EM MAP AJUSTADO\n "
         + "XMax = " + XMax + ", XMin = " + XMin + ",YMax = " + YMax + ",YMin = " + YMin + "\n" );
         
         
         System.out.println("XMax-Xmin = " + (XMax-XMin) + "YMax-YMin = " + (YMax-YMin));
-        
+        */
+
         Double comprimento = (XMax-XMin);
         Double altura = (YMax-YMin);
         
@@ -186,12 +196,12 @@ public class Map {
         retorno[0] = comprimento;
         retorno[1] = altura;
 
-        System.out.println("VALORES SETADOS");
+        //System.out.println("VALORES SETADOS");
         
         return(retorno);
     }
     
-    public static Double[] setNiceParametros(Polygon polygon)
+    public Double[] setNiceParametros(Polygon polygon)
     {
         List< Polygon > polyLista = new ArrayList<>();
         polyLista.add(polygon);

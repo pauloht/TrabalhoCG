@@ -9,7 +9,10 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import Data.Base_Data.*;
 import Data.Composta_Data.*;
+import Pipeline.CameraPacote.CameraClass;
+import Pipeline.Mapeamento.Map;
 import Pipeline.Projecao.ProjecaoEnum;
+import View.JanelaPrincipal;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +24,11 @@ import java.util.List;
  */
 public class MyJPanel extends JPanel{
     //private final List<Polygon>poly = new ArrayList<>();
-    SuperPolygon poligonos = new SuperPolygon(new ArrayList<>());
+    public Polygon polygon;
     public String nome = "NomeDefault";
+    public Map map = new Map();
+    
+    public boolean mapeamentoAutomatico = true;
     //private fin
     
     public ProjecaoEnum tipoProjecao = ProjecaoEnum.FRONTAL;
@@ -30,27 +36,41 @@ public class MyJPanel extends JPanel{
     public MyJPanel()
     {
         super();
-        Font fonte = new Font(Font.DIALOG,Font.BOLD,12);
-        this.setFont(fonte);
-        this.setLayout(null);
+    }
+    
+    public MyJPanel(Polygon algumPolygono)
+    {
+        super();
+        polygon = algumPolygono;
     }
     
     @Override
     synchronized public void paint(Graphics g)
     {
         super.paint(g);
+        System.out.println("REPAINT");
+        System.out.println("REDESENHANDO");
         //System.out.println("Dimension = " + this.getSize());
         //System.out.println("super chamado!");
+        Polygon copia = new Polygon(polygon);
 
-            Polygon otherpoly = poligonos.getSuperPolygon();
-            
-            System.out.println("antes projecao = " + otherpoly.get3DVertexMatrix());
-            Matrix depoisProjecao = tipoProjecao.getMatrix().multiplicacaoMatrix(otherpoly.get3DVertexMatrix());
-            System.out.println("depois projecao = " + otherpoly.get3DVertexMatrix());
-            otherpoly.set3DVertexMatrix(depoisProjecao);
+        //System.out.println("Antes da camera = " + copia.get3DVertexMatrix());
 
+        Matrix operacao_de_camera = CameraClass.getInstance().getTransform_matrix();
+        //System.out.println("matrix de camera = " + operacao_de_camera);
+        Matrix depois_da_camera = operacao_de_camera.multiplicacaoMatrix(copia.get3DVertexMatrix());
+        copia.set3DVertexMatrix(depois_da_camera);
+
+        //System.out.println("antes projecao = " + copia.get3DVertexMatrix());
+        //System.out.println("Matrix de projecao = " + tipoProjecao.getMatrix());
+        Matrix depoisProjecao = tipoProjecao.getMatrix().multiplicacaoMatrix(copia.get3DVertexMatrix());
+        copia.set3DVertexMatrix(depoisProjecao);
+        //System.out.println("depois projecao = " + copia.get3DVertexMatrix());
+
+        if (mapeamentoAutomatico)
+        {
             Double[] medidas;
-            medidas = Pipeline.Mapeamento.Map.setNiceParametros(otherpoly);
+            medidas = map.setNiceParametros(copia);
 
             Double comprimento = medidas[0];
             Double altura = medidas[1];
@@ -82,69 +102,75 @@ public class MyJPanel extends JPanel{
             sobraNaAltura = alturaMaximo - alturaNoPanel;
 
 
-
+            /*
             System.out.println("comprimento = " + comprimento + ",altura = " + altura + "\n" +
                                "No panel comprimentoMaximo = " + comprimentoMaximo + ",Altura maxima = " + alturaMaximo + "\n" +
                                 "No panel comprimento = " + comprimentoNoPanel + ",altura = " + alturaNoPanel + "\n" +
                                  "Sobra comprimento = " + sobraNoComprimento + ",sobra altura = " + sobraNaAltura);
+            */
 
-            Matrix operacao_mapeamento = Pipeline.Mapeamento.Map.getMappingMatrix( comprimentoMaximo - Math.floor(sobraNoComprimento/2.00), Math.floor(sobraNoComprimento/2.00), this.getSize().height - Math.floor(sobraNaAltura/2.00), Math.floor(sobraNaAltura/2.00) );
-            Matrix depois_mapeamento = operacao_mapeamento.multiplicacaoMatrix( otherpoly.get2DVertexMatrix() );
-            System.out.println("No panel " + nome + " depois do mapeamento = " + depois_mapeamento);
-            otherpoly.set2DVertexMatrix(depois_mapeamento);
-            
-            
-            int x1,y1,x2,y2;
-            if (otherpoly.edge_list != null)
+            map.UMax = new Double(comprimentoMaximo - Math.floor(sobraNoComprimento/2.00));
+            map.UMin = new Double(Math.floor(sobraNoComprimento/2.00));
+            map.VMax = new Double(this.getSize().height - Math.floor(sobraNaAltura/2.00));
+            map.VMin = new Double(Math.floor(sobraNaAltura/2.00));
+        }
+        Matrix operacao_mapeamento = map.getMappingMatrix();
+        Matrix depois_mapeamento = operacao_mapeamento.multiplicacaoMatrix( copia.get2DVertexMatrix() );
+        //System.out.println("No panel " + nome + " depois do mapeamento = " + depois_mapeamento);
+        copia.set2DVertexMatrix(depois_mapeamento);
+
+
+        int x1,y1,x2,y2;
+        if (copia.edge_list != null)
+        {
+            for (Edge edge : copia.edge_list)
             {
-                for (Edge edge : otherpoly.edge_list)
+                x1 = edge.getStart_vertex().getPosArray()[0].intValue();
+                if (x1 == 0)
                 {
-                    x1 = edge.getStart_vertex().getPosArray()[0].intValue();
-                    if (x1 == 0)
-                    {
-                        x1 = 1;
-                    }
-                    if (x1 >= this.getSize().width-1)
-                    {
-                        x1 = this.getSize().width-2;
-                    }
-
-                    y1 = edge.getStart_vertex().getPosArray()[1].intValue();
-                    if (y1 == 0)
-                    {
-                        y1 = 1;
-                    }
-                    if (y1 >= this.getSize().height-1)
-                    {
-                        y1 = this.getSize().height-2;
-                    }
-
-                    x2 = edge.getEnd_vertex().getPosArray()[0].intValue();
-                    if (x2 == 0)
-                    {
-                        x2 = 1;
-                    }
-                    if (x2 >= this.getSize().width-1)
-                    {
-                        x2 = this.getSize().width-2;
-                    }
-
-                    y2 = edge.getEnd_vertex().getPosArray()[1].intValue();
-                    if (y2 == 0)
-                    {
-                        y2 = 1;
-                    }
-                    if (y2 >= this.getSize().height-1)
-                    {
-                        y2 = this.getSize().height-2;
-                    }
-
-                    //System.out.println("x1 = " + x1 + ",y1 = " + y1 + ",x2 = " + x2 + ",y2 = " + y2);
-                    g.drawLine(x1, y1, x2, y2);
-
+                    x1 = 1;
                 }
+                if (x1 >= this.getSize().width-1)
+                {
+                    x1 = this.getSize().width-2;
+                }
+
+                y1 = edge.getStart_vertex().getPosArray()[1].intValue();
+                if (y1 == 0)
+                {
+                    y1 = 1;
+                }
+                if (y1 >= this.getSize().height-1)
+                {
+                    y1 = this.getSize().height-2;
+                }
+
+                x2 = edge.getEnd_vertex().getPosArray()[0].intValue();
+                if (x2 == 0)
+                {
+                    x2 = 1;
+                }
+                if (x2 >= this.getSize().width-1)
+                {
+                    x2 = this.getSize().width-2;
+                }
+
+                y2 = edge.getEnd_vertex().getPosArray()[1].intValue();
+                if (y2 == 0)
+                {
+                    y2 = 1;
+                }
+                if (y2 >= this.getSize().height-1)
+                {
+                    y2 = this.getSize().height-2;
+                }
+
+                //System.out.println("x1 = " + x1 + ",y1 = " + y1 + ",x2 = " + x2 + ",y2 = " + y2);
+                g.drawLine(x1, y1, x2, y2);
+
             }
-        //g.drawString("HELLO FKING MUNDO", 0, this.getFont().getSize()+500);
+        }
+        JanelaPrincipal.foiFeitoRepaint(this);
     }
     
     @Override
@@ -152,23 +178,5 @@ public class MyJPanel extends JPanel{
     {
         super.repaint();
         //System.out.println("repaint chamado");
-    }
-    
-    public void addPolygon(Polygon otherpoly)
-    {
-        poligonos.addPolygon(otherpoly);
-    }
-    
-    public void addPolygon(List< Polygon > otherpoly)
-    {
-        for (Polygon local_poly : otherpoly)
-        {
-            addPolygon(local_poly);
-        }
-    }
-    
-    public void clearPoly()
-    {
-        poligonos.clearPolygonos();
     }
 }

@@ -27,6 +27,14 @@ public class SuperPolygon {
         poligonos.add(poly);
     }
     
+    public void addPolygon(List< Polygon > poly)
+    {
+        for (Polygon poligono : poly)
+        {
+            addPolygon(poligono);
+        }
+    }
+    
     public void clearPolygonos()
     {
         poligonos.clear();
@@ -38,4 +46,5 @@ public class SuperPolygon {
         Polygon copiaBarata = new Polygon(poligonos.get(0));
         return( copiaBarata );
     }
+    
 }

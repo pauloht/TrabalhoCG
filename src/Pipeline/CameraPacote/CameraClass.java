@@ -102,7 +102,7 @@ public class CameraClass {
         
         Matrix retorno = matrix_de_rotacao.multiplicacaoMatrix(matrix_de_translacao);
         //System.out.println("retorno="+retorno);
-        System.out.println("N="+N+"\nn="+n+"\nV="+V+"\nv="+v+"\nu="+u+"\nTransform_matrix->" + retorno);
+        //System.out.println("N="+N+"\nn="+n+"\nV="+V+"\nv="+v+"\nu="+u+"\nTransform_matrix->" + retorno);
         this.transform_matrix = retorno;
     }
 
