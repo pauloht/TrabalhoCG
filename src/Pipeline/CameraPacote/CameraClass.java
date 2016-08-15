@@ -7,7 +7,8 @@ package Pipeline.CameraPacote;
 import Data.Base_Data.*;
 
 /**
- *
+ * Configuracoes de Camera
+ * SINGLETON
  * @author Paulo.Tenorio
  */
 public class CameraClass {
@@ -16,7 +17,9 @@ public class CameraClass {
     Vertex view_up;//view up da camera Y
     Matrix transform_matrix;//matriz de conversao de SRU para SRC
     
-    public CameraClass()
+    private static CameraClass CAMERA;
+    
+    private CameraClass()
     {
         vrp = new Vertex();
         p = new Vertex();
@@ -26,6 +29,15 @@ public class CameraClass {
                             {0.00,0.00,1.00,0.00},
                             {0.00,0.00,0.00,1.00}};
         transform_matrix = new Matrix(base);
+    }
+    
+    public static CameraClass getInstance()
+    {
+        if (CAMERA == null)
+        {
+            CAMERA = new CameraClass();
+        }
+        return(CAMERA);
     }
     
     private void updateTransform_matrix()

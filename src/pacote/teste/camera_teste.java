@@ -13,7 +13,7 @@ import Data.Base_Data.*;
 public class camera_teste {
     public static void test()
     {
-        CameraClass camera = new CameraClass();
+        CameraClass camera = CameraClass.getInstance();
         camera.setVrp(new Vertex(-40.00,80.00,-70.00));
         camera.setP(new Vertex(10.00,-20.00,18.00));
         camera.setView_up(new Vertex(1.00,1.00,0.00));

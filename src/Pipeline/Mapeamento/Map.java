@@ -6,6 +6,7 @@
 package Pipeline.Mapeamento;
 import Data.Base_Data.*;
 import Data.Composta_Data.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -188,5 +189,12 @@ public class Map {
         System.out.println("VALORES SETADOS");
         
         return(retorno);
+    }
+    
+    public static Double[] setNiceParametros(Polygon polygon)
+    {
+        List< Polygon > polyLista = new ArrayList<>();
+        polyLista.add(polygon);
+        return( setNiceParametros(polyLista) );
     }
 }
