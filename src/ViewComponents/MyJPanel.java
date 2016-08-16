@@ -13,9 +13,6 @@ import Pipeline.CameraPacote.CameraClass;
 import Pipeline.Mapeamento.Map;
 import Pipeline.Projecao.ProjecaoEnum;
 import View.JanelaPrincipal;
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -126,13 +123,14 @@ public class MyJPanel extends JPanel{
             for (Edge edge : copia.edge_list)
             {
                 x1 = edge.getStart_vertex().getPosArray()[0].intValue();
+                
                 if (x1 == 0)
                 {
                     x1 = 1;
                 }
-                if (x1 >= this.getSize().width-1)
+                if (x1 == this.getSize().width)
                 {
-                    x1 = this.getSize().width-2;
+                    x1 = this.getSize().width-1;
                 }
 
                 y1 = edge.getStart_vertex().getPosArray()[1].intValue();
@@ -140,9 +138,9 @@ public class MyJPanel extends JPanel{
                 {
                     y1 = 1;
                 }
-                if (y1 >= this.getSize().height-1)
+                if (y1 == this.getSize().height)
                 {
-                    y1 = this.getSize().height-2;
+                    y1 = this.getSize().height-1;
                 }
 
                 x2 = edge.getEnd_vertex().getPosArray()[0].intValue();
@@ -150,19 +148,20 @@ public class MyJPanel extends JPanel{
                 {
                     x2 = 1;
                 }
-                if (x2 >= this.getSize().width-1)
+                if (x2 == this.getSize().width)
                 {
-                    x2 = this.getSize().width-2;
+                    x2 = this.getSize().width-1;
                 }
 
                 y2 = edge.getEnd_vertex().getPosArray()[1].intValue();
+                
                 if (y2 == 0)
                 {
                     y2 = 1;
                 }
-                if (y2 >= this.getSize().height-1)
+                if (y2 == this.getSize().height)
                 {
-                    y2 = this.getSize().height-2;
+                    y2 = this.getSize().height-1;
                 }
 
                 //System.out.println("x1 = " + x1 + ",y1 = " + y1 + ",x2 = " + x2 + ",y2 = " + y2);

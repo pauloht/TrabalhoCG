@@ -88,7 +88,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         camera = CameraClass.getInstance();
         camera.setP(new Vertex(0.00,0.00,4.00));
         camera.setVrp(new Vertex(0.00,0.00,5.00));
-        camera.setView_up(new Vertex(0.00,1.00,0.00));
+        camera.setView_up(new Vertex(0.00,-1.00,0.00));
         
         scene = new SuperPolygon( polyLista );
         pTopL = new MyJPanel(scene.getSuperPolygon());
