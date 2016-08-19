@@ -407,7 +407,6 @@ public class PlanoPanel extends javax.swing.JPanel {
         panel.mapeamentoAutomatico = bMapAutomatico.isSelected();
         if (bMapAutomatico.isSelected())
         {
-            panel.repaint();
             carregarValoresTF();
         }
     }//GEN-LAST:event_bMapAutomaticoActionPerformed
@@ -564,7 +563,6 @@ public class PlanoPanel extends javax.swing.JPanel {
             carregarValoresTF();
         }
         
-        panel.repaint();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

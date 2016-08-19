@@ -15,10 +15,12 @@ import Pipeline.Projecao.ProjecaoEnum;
 import ViewComponents.MyJPanel;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 /**
  *
@@ -75,6 +77,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     public PlanoPanel planoPanel;
     
     public static JanelaPrincipal janela = null;
+    
     
     //adicionar variavel que controle parametros de mapeamento
     //Mapping map
@@ -136,12 +139,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         painelSelecionado = pMTopL;
         mypainelSelecionado = pTopL;
         
+        
         pack();
         ViewGlobal.centralizarJanela(this);
         
         planoPanel.setSize(pParaPlanos.getSize());
+        seletorObjetos.addPolygon(polyLista);
         update();
         this.setVisible(true);
+        this.revalidate();
     }
     
     public static void foiFeitoRepaint(MyJPanel onde)
@@ -167,6 +173,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         {
             painelSelecionado.setBackground(Color.RED);
         }
+        
+        pTopR.polygon = scene.getSuperPolygon();
+        pTopL.polygon = scene.getSuperPolygon();
+        pBottomR.polygon = scene.getSuperPolygon();
+        pBottomL.polygon = scene.getSuperPolygon();
         
         lbBottomL.setText(pBottomL.tipoProjecao.toString());
         lbBottomR.setText(pBottomR.tipoProjecao.toString());
@@ -207,8 +218,16 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         carregarCamera();
         planoPanel.update();
         
+        pTopR.repaint();
+        pTopL.repaint();
+        pBottomR.repaint();
+        pBottomL.repaint();
         
-        
+    }
+    
+    public void updateExterno()
+    {
+        update();
     }
     
     private void carregarCamera()
@@ -278,6 +297,8 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         tfViewUX = new javax.swing.JTextField();
         tfPY = new javax.swing.JTextField();
         tfViewUZ = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        seletorObjetos = new View.SeletorObjetos();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -349,7 +370,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pMTopRLayout.setHorizontalGroup(
             pMTopRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMTopRLayout.createSequentialGroup()
-                .addContainerGap(72, Short.MAX_VALUE)
+                .addContainerGap(76, Short.MAX_VALUE)
                 .addComponent(lbTopR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(68, 68, 68))
             .addGroup(pMTopRLayout.createSequentialGroup()
@@ -396,7 +417,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             .addGroup(pMBottomLLayout.createSequentialGroup()
                 .addGap(65, 65, 65)
                 .addComponent(lbBottomL, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(76, Short.MAX_VALUE))
+                .addContainerGap(80, Short.MAX_VALUE))
         );
         pMBottomLLayout.setVerticalGroup(
             pMBottomLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -639,6 +660,23 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Config", jPanel6);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(seletorObjetos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 140, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(seletorObjetos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 211, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("Objetos", jPanel1);
+
         javax.swing.GroupLayout pViewsLayout = new javax.swing.GroupLayout(pViews);
         pViews.setLayout(pViewsLayout);
         pViewsLayout.setHorizontalGroup(
@@ -672,7 +710,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pViews, javax.swing.GroupLayout.DEFAULT_SIZE, 1003, Short.MAX_VALUE)
+            .addComponent(pViews, javax.swing.GroupLayout.PREFERRED_SIZE, 1003, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -724,9 +762,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                Polygon poly = PolygonGenerator.generatePiramideQuadrada(5.00, 2.00, new Vertex(0.00,0.00,0.00));
+                Polygon piramide = PolygonGenerator.generatePiramideQuadrada(5.00, 2.00, new Vertex(0.00,0.00,0.00));
+                piramide.nome = "Piramide";
+                Polygon cubo = PolygonGenerator.generateCube(2.00, new Vertex(0.00,0.00,0.00));
+                cubo.nome = "Cubo";
                 List< Polygon > polyLista = new ArrayList<>();
-                polyLista.add(poly);
+                polyLista.add(piramide);
+                polyLista.add(cubo);
                 JanelaPrincipal janela = new JanelaPrincipal(polyLista);
             }
         });
@@ -768,6 +810,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -788,6 +831,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel pMTopR;
     private javax.swing.JPanel pParaPlanos;
     private javax.swing.JPanel pViews;
+    private View.SeletorObjetos seletorObjetos;
     private javax.swing.JTextField tfPX;
     private javax.swing.JTextField tfPY;
     private javax.swing.JTextField tfPZ;

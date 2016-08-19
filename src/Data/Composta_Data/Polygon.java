@@ -14,6 +14,7 @@ import java.util.List;
  * @author Paulo.Tenorio
  */
 public class Polygon {
+    public String nome = "NomeDefault";
     public List<Vertex> vertex_list;
     public List<Edge> edge_list;
     public List<Face> face_list;

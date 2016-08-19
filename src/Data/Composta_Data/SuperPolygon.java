@@ -43,8 +43,16 @@ public class SuperPolygon {
     public Polygon getSuperPolygon()
     {
         //depois arrumo
-        Polygon copiaBarata = new Polygon(poligonos.get(0));
-        return( copiaBarata );
+        Polygon retorno = new Polygon();
+        for (Polygon poligono : poligonos)
+        {
+            Polygon copia = new Polygon(poligono);
+            retorno.vertex_list.addAll(copia.vertex_list);
+            retorno.edge_list.addAll(copia.edge_list);
+            retorno.face_list.addAll(copia.face_list);
+            //System.out.println("SUPER POLIGONO POLY : " + copia.get3DVertexMatrix());
+        }
+        return( retorno );
     }
     
 }

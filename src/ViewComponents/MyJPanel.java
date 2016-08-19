@@ -45,8 +45,8 @@ public class MyJPanel extends JPanel{
     synchronized public void paint(Graphics g)
     {
         super.paint(g);
-        System.out.println("REPAINT");
-        System.out.println("REDESENHANDO");
+        //System.out.println("REPAINT");
+        //System.out.println("REDESENHANDO");
         //System.out.println("Dimension = " + this.getSize());
         //System.out.println("super chamado!");
         Polygon copia = new Polygon(polygon);
@@ -105,9 +105,15 @@ public class MyJPanel extends JPanel{
                                 "No panel comprimento = " + comprimentoNoPanel + ",altura = " + alturaNoPanel + "\n" +
                                  "Sobra comprimento = " + sobraNoComprimento + ",sobra altura = " + sobraNaAltura);
             */
-
+            
             map.UMax = new Double(comprimentoMaximo - Math.floor(sobraNoComprimento/2.00));
             map.UMin = new Double(Math.floor(sobraNoComprimento/2.00));
+            if (map.UMin < 0)
+            {
+                System.err.println("comprimentoMaximo = " + comprimentoMaximo);
+                System.err.println("comprimentoNoPanel = " + comprimentoNoPanel);
+                System.err.println("sobraNoComprimento = " + sobraNoComprimento);
+            }
             map.VMax = new Double(this.getSize().height - Math.floor(sobraNaAltura/2.00));
             map.VMin = new Double(Math.floor(sobraNaAltura/2.00));
         }
