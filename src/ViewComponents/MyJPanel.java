@@ -81,19 +81,21 @@ public class MyJPanel extends JPanel{
             Double sobraNoComprimento;
             Double sobraNaAltura;
 
-            Double razaoNoMundo = comprimento/altura;
-            Double razaoNoPanel = comprimentoMaximo/alturaMaximo;
-
-            if (comprimentoMaximo > alturaMaximo)
+            Double razaoComprimento = comprimentoMaximo/comprimento;
+            Double razaoAltura = alturaMaximo/altura;
+            Double razaoUsada;
+            
+            if (razaoComprimento < razaoAltura)
             {
-                alturaNoPanel = alturaMaximo;
-                comprimentoNoPanel = comprimento*alturaMaximo/altura;
+                razaoUsada = razaoComprimento;
             }
             else
             {
-                comprimentoNoPanel = comprimentoMaximo;
-                alturaNoPanel = altura*comprimentoMaximo/comprimento;
+                razaoUsada = razaoAltura;
             }
+            
+            comprimentoNoPanel = comprimento*razaoUsada;
+            alturaNoPanel = altura*razaoUsada;
 
             sobraNoComprimento = comprimentoMaximo - comprimentoNoPanel;
             sobraNaAltura = alturaMaximo - alturaNoPanel;
