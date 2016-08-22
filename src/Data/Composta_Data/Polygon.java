@@ -19,6 +19,11 @@ public class Polygon {
     public List<Edge> edge_list;
     public List<Face> face_list;
     
+    public Polygon base = null;
+    public List< Polygon > segmentos = new ArrayList<>();
+    
+    public Vertex cg = null;
+    
     public Polygon()
     {
         vertex_list = new ArrayList<>();
@@ -119,6 +124,11 @@ public class Polygon {
         face_list.add(new_face);
     }
     //fim metodos relacionados a faces
+    
+    public void setBase(Polygon poly)
+    {
+        base = poly;
+    }
     
     public void printMe()
     {

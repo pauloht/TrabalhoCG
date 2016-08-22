@@ -54,5 +54,9 @@ public class SuperPolygon {
         }
         return( retorno );
     }
+
+    public List<Polygon> getPoligonos() {
+        return poligonos;
+    }
     
 }

@@ -157,4 +157,39 @@ public class PolygonGenerator {
 
         return( retorno );
     }
+    
+    public static Polygon generateBaseQuadrada(Double lado,Vertex Centro)
+    {
+        Polygon retorno;
+        List< Face > faceLista = new ArrayList<>();
+        List< Edge > edgeLista = new ArrayList<>();
+        List< Vertex > vertexLista = new ArrayList<>();
+        
+        double centrox = Centro.getPos_x();
+        double centroy = Centro.getPos_y();
+        double centroz = Centro.getPos_z();
+        
+        Vertex a = new Vertex(centrox + lado/2,centroy,centroz + lado/2);
+        Vertex b = new Vertex(centrox - lado/2,centroy,centroz + lado/2);
+        Vertex c = new Vertex(centrox - lado/2,centroy,centroz - lado/2);
+        Vertex d = new Vertex(centrox + lado/2,centroy,centroz - lado/2);
+        vertexLista.add(a);
+        vertexLista.add(b);
+        vertexLista.add(c);
+        vertexLista.add(d);
+        
+        Edge ab = new Edge(a,b);
+        Edge bc = new Edge(b,c);
+        Edge cd = new Edge(c,d);
+        Edge da = new Edge(d,a);
+        edgeLista.add(ab);
+        edgeLista.add(bc);
+        edgeLista.add(cd);
+        edgeLista.add(da);
+        
+        retorno = new Polygon(vertexLista,edgeLista,faceLista);
+        retorno.setBase(new Polygon(retorno));
+        
+        return(retorno);
+    }
 }

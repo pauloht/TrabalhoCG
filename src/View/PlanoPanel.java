@@ -481,7 +481,7 @@ public class PlanoPanel extends javax.swing.JPanel {
             mudarEstadoTF();
             carregarValoresTF();
         }
-        System.out.println("UPDATE PLANOPANELFEITO");
+        //System.out.println("UPDATE PLANOPANELFEITO");
     }
     
     /**

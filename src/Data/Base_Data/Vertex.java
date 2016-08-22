@@ -139,8 +139,6 @@ public class Vertex {
         }
         return true;
     }
-    
-    
 
     @Override
     public String toString() {

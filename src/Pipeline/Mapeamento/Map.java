@@ -93,7 +93,7 @@ public class Map {
             {
                 Vertex vertex_inicio = edge.getStart_vertex();
                 Vertex vertex_fim = edge.getEnd_vertex();
-                
+                //System.out.println("xvertexinicio = " + edge.getStart_vertex());
                 Double x_vertex_inicio = vertex_inicio.getPos_x();
                 Double y_vertex_inicio = vertex_inicio.getPos_y();
                 
