@@ -40,6 +40,11 @@ public class SuperPolygon {
         poligonos.clear();
     }
     
+    public void deleteAt(int indice)
+    {
+        poligonos.remove(indice);
+    }
+    
     public Polygon getSuperPolygon()
     {
         //depois arrumo

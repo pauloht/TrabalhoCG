@@ -23,8 +23,9 @@ public class Extrusao {
         }
         Polygon retorno = new Polygon(base);
         Polygon baseLocal = retorno;
-        retorno.base = retorno;
-        
+        retorno.base = new Polygon( retorno );
+        Vertex alvo = new Vertex(centroDaBase.getPos_x()+translacaoX,centroDaBase.getPos_y()+translacaoY,centroDaBase.getPos_z()+translacaoZ);
+        retorno.alvo = alvo;
         int numeroExtrusoes = numeroSegmentos + 1;
         double translacaoXParcial = translacaoX/numeroExtrusoes;
         double translacaoYParcial = translacaoY/numeroExtrusoes;
@@ -41,7 +42,9 @@ public class Extrusao {
             {
                 extrusao = new Polygon( retorno.segmentos.get(j-1) );
             }
+            //System.out.println("base = " + base.get3DVertexMatrix());
             //System.out.println("extrusao começo = ");
+            //System.out.println(extrusao.get3DVertexMatrix());
             for (int i=0;i<base.vertex_list.size();i++)
             {
                 Vertex vertexComeço;
@@ -77,7 +80,20 @@ public class Extrusao {
         retorno.nome = "PoligonoExtrudido";
         
         System.out.println("poligono extrudido : " + retorno.get3DVertexMatrix());
-        
+        retorno.vertex_list.addAll(retorno.base.vertex_list);
+        retorno.vertex_list.add(alvo);
         return(retorno);
+    }
+    
+    public static Polygon reSegmentar(Polygon poligono,int numeroSegmentos)
+    {
+        Polygon base = poligono.base;
+        base.base = new Polygon(base);
+        Vertex alvo = poligono.alvo;
+        Vertex origem = base.calculateCG();
+        double distanciaX = alvo.getPos_x() - origem.getPos_x();
+        double distanciaY = alvo.getPos_y() - origem.getPos_y();
+        double distanciaZ = alvo.getPos_z() - origem.getPos_z();
+        return( gerarPolygonoExtrudido(base, numeroSegmentos, origem, distanciaX, distanciaY, distanciaZ) );
     }
 }

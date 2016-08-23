@@ -5,7 +5,8 @@
         <group>
             <file>file:/C:/Users/FREE/Desktop/TrabalhoCG/src/Generator/Extrusao.java</file>
             <file>file:/C:/Users/FREE/Desktop/TrabalhoCG/src/View/SeletorObjetos.java</file>
-            <file>file:/C:/Users/FREE/Desktop/TrabalhoCG/src/Data/Composta_Data/Polygon.java</file>
+            <file>file:/C:/Users/FREE/Desktop/TrabalhoCG/src/Generator/PolygonGenerator.java</file>
+            <file>file:/C:/Users/FREE/Desktop/TrabalhoCG/src/Data/Base_Data/Vertex.java</file>
             <file>file:/C:/Users/FREE/Desktop/TrabalhoCG/src/View/JanelaPrincipal.java</file>
         </group>
     </open-files>

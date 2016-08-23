@@ -107,6 +107,20 @@ public class Vertex {
         return(retorno);
     }
 
+    public static double distanciaEntreDoisVetores(Vertex a,Vertex b)
+    {
+        double aX = a.getPos_x();
+        double aY = a.getPos_y();
+        double aZ = a.getPos_z();
+        
+        double bX = b.getPos_x();
+        double bY = b.getPos_y();
+        double bZ = b.getPos_z();
+        
+        double distancia = Math.sqrt( (aX - bX)*(aX - bX) + (aY - bY)*(aY - bY) + (aZ - bZ)*(aZ - bZ) );
+        return( distancia );
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;

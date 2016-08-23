@@ -23,6 +23,7 @@ public class Polygon {
     public List< Polygon > segmentos = new ArrayList<>();
     
     public Vertex cg = null;
+    public Vertex alvo = null;
     
     public Polygon()
     {
@@ -90,6 +91,26 @@ public class Polygon {
         this.vertex_list = novosVertex;
         this.edge_list = novasEdges;
         this.face_list = novasFaces;
+    }
+    
+    public void refresh(Polygon novaAparencia)
+    {
+        if (novaAparencia == null)
+        {
+            System.out.println("NOVAAPARENCIA NULL");
+        }
+        else
+        {
+            if (novaAparencia.vertex_list == null)
+            {
+                System.out.println("vertex list == null");
+            }
+        }
+        this.vertex_list = novaAparencia.vertex_list;
+        this.edge_list = novaAparencia.edge_list;
+        this.face_list = novaAparencia.face_list;
+        this.base = novaAparencia.base;
+        this.segmentos =  novaAparencia.segmentos;
     }
     
     //metodos relacionados a vertex

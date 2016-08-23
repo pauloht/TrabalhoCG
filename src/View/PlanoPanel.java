@@ -409,6 +409,10 @@ public class PlanoPanel extends javax.swing.JPanel {
         {
             carregarValoresTF();
         }
+        if (JanelaPrincipal.janela != null)
+        {
+            JanelaPrincipal.janela.updateExterno();
+        }
     }//GEN-LAST:event_bMapAutomaticoActionPerformed
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
@@ -562,7 +566,10 @@ public class PlanoPanel extends javax.swing.JPanel {
         {
             carregarValoresTF();
         }
-        
+        if (JanelaPrincipal.janela != null)
+        {
+            JanelaPrincipal.janela.updateExterno();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

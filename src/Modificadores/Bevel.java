@@ -34,12 +34,12 @@ public class Bevel {
             Matrix translacao2 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(+cg.getPos_x(), +cg.getPos_y(), +cg.getPos_z()) );
             
             List< Matrix > operacoes = new ArrayList<>();
+            //System.out.println("localPoly = " + local.nome);
             //System.out.println("cg = " + cg);
             //System.out.println("local cordenadas antes : " + local.get3DVertexMatrix());
             operacoes.add(translacao1);
             operacoes.add(escala);
             operacoes.add(translacao2);
-            //System.out.println("local cordenadas depois : " + local.get3DVertexMatrix());
             
             
             Matrix concatenada = Matrix.concatenacao(operacoes);
