@@ -47,16 +47,28 @@ public class SuperPolygon {
     
     public Polygon getSuperPolygon()
     {
-        //depois arrumo
+        if (poligonos == null || poligonos.size() == 0)
+        {
+            //System.out.println("RETORNO NULO SUPERPOLYGONO");
+            return(null);
+        }
         Polygon retorno = new Polygon();
         for (Polygon poligono : poligonos)
         {
-            Polygon copia = new Polygon(poligono);
-            retorno.vertex_list.addAll(copia.vertex_list);
-            retorno.edge_list.addAll(copia.edge_list);
-            retorno.face_list.addAll(copia.face_list);
-            //System.out.println("SUPER POLIGONO POLY : " + copia.get3DVertexMatrix());
+            //Polygon copia = new Polygon(poligono);
+            //copia.aplicarModificadores();
+            //copia.aplicarOperacoesGeometricas();
+            poligono.aplicarModificadores();
+            //System.out.println("Root antes de OG = " + poligono.get3DVertexMatrixRoot());
+            //System.out.println("Dummy antes de OG = " + poligono.get3DVertexMatrixDummy());
+            poligono.aplicarOperacoesGeometricas();
+            //System.out.println("Root depois de OG = " + poligono.get3DVertexMatrixRoot());
+            //System.out.println("Dummy depois de OG = " + poligono.get3DVertexMatrixDummy());
+            retorno.vertex_list.addAll(poligono.vertex_list);
+            retorno.edge_list.addAll(poligono.edge_list);
+            retorno.face_list.addAll(poligono.face_list);
         }
+        //System.out.println("(Em superPoligono) retorno depois de modificadores : " + retorno.get3DVertexMatrixDummy());
         return( retorno );
     }
 

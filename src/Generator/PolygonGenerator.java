@@ -27,9 +27,9 @@ public class PolygonGenerator {
     {
         Double meio_lado = lado/2.00;
         
-        Double base_x = Centro.getPos_x();
-        Double base_y = Centro.getPos_y();
-        Double base_z = Centro.getPos_z();
+        Double base_x = Centro.getPosXDummy();
+        Double base_y = Centro.getPosYDummy();
+        Double base_z = Centro.getPosZDummy();
         
         Polygon retorno;
         List< Vertex > vertex_list = new ArrayList<>();
@@ -120,11 +120,11 @@ public class PolygonGenerator {
         
         Double meio_lado = new Double(lado/2.00);
         
-        b1 = new Vertex(meio_lado+centro.getPos_x(),centro.getPos_y(),meio_lado+centro.getPos_z());
-        b2 = new Vertex(meio_lado+centro.getPos_x(),centro.getPos_y(),-meio_lado+centro.getPos_z());
-        b3 = new Vertex(-meio_lado+centro.getPos_x(),centro.getPos_y(),meio_lado+centro.getPos_z());
-        b4 = new Vertex(-meio_lado+centro.getPos_x(),centro.getPos_y(),-meio_lado+centro.getPos_z());
-        a1 = new Vertex(centro.getPos_x(),centro.getPos_y() + altura ,centro.getPos_z());
+        b1 = new Vertex(meio_lado+centro.getPosXDummy(),centro.getPosYDummy(),meio_lado+centro.getPosZDummy());
+        b2 = new Vertex(meio_lado+centro.getPosXDummy(),centro.getPosYDummy(),-meio_lado+centro.getPosZDummy());
+        b3 = new Vertex(-meio_lado+centro.getPosXDummy(),centro.getPosYDummy(),meio_lado+centro.getPosZDummy());
+        b4 = new Vertex(-meio_lado+centro.getPosXDummy(),centro.getPosYDummy(),-meio_lado+centro.getPosZDummy());
+        a1 = new Vertex(centro.getPosXDummy(),centro.getPosYDummy() + altura ,centro.getPosZDummy());
         
         vertex_list.add(b1);
         vertex_list.add(b2);
@@ -166,9 +166,9 @@ public class PolygonGenerator {
         List< Edge > edgeLista = new ArrayList<>();
         List< Vertex > vertexLista = new ArrayList<>();
         
-        double centrox = Centro.getPos_x();
-        double centroy = Centro.getPos_y();
-        double centroz = Centro.getPos_z();
+        double centrox = Centro.getPosXDummy();
+        double centroy = Centro.getPosYDummy();
+        double centroz = Centro.getPosZDummy();
         
         Vertex a = new Vertex(centrox + lado/2,centroy,centroz + lado/2);
         Vertex b = new Vertex(centrox - lado/2,centroy,centroz + lado/2);
@@ -201,9 +201,9 @@ public class PolygonGenerator {
         List< Edge > edgeLista = new ArrayList<>();
         List< Vertex > vertexLista = new ArrayList<>();
         
-        double centrox = Centro.getPos_x();
-        double centroy = Centro.getPos_y();
-        double centroz = Centro.getPos_z();
+        double centrox = Centro.getPosXDummy();
+        double centroy = Centro.getPosYDummy();
+        double centroz = Centro.getPosZDummy();
         
         Vertex a = new Vertex(centrox + (lado*Math.sqrt(3))/4,centroy,centroz);
         Vertex b = new Vertex(centrox - (lado*Math.sqrt(3))/4,centroy,centroz + lado/2);
@@ -234,15 +234,15 @@ public class PolygonGenerator {
         return(retorno);
     }
     
-    public static Polygon generateGenericPolygon(Double tamanhoLado,Vertex Centro,int numLados){
+    public static Polygon generateGenericPolygon(double tamanhoLado,Vertex Centro,int numLados){
         Polygon retorno;
         List< Face > faceLista = new ArrayList<>();
         List< Edge > edgeLista = new ArrayList<>();
         List< Vertex > vertexLista = new ArrayList<>();
         
-        double centrox = Centro.getPos_x();
-        double centroy = Centro.getPos_y();
-        double centroz = Centro.getPos_z();
+        double centrox = Centro.getPosXDummy();
+        double centroy = Centro.getPosYDummy();
+        double centroz = Centro.getPosZDummy();
         double somaAngulos,angulosExternos;
         Vertex a = new Vertex(1.0,0.0,0.0);
         vertexLista.add(a);
@@ -258,18 +258,18 @@ public class PolygonGenerator {
             vertexLista.add(b);
             edgeLista.add(ab);
             Double[][] valores = new Double[4][1];
-            valores[0][0] = b.getPos_x();
-            valores[1][0] = b.getPos_y();
-            valores[2][0] = b.getPos_z();
+            valores[0][0] = b.getPosXDummy();
+            valores[1][0] = b.getPosYDummy();
+            valores[2][0] = b.getPosZDummy();
             valores[3][0] = 1.00;
             //System.out.println("PONTOS ANTES = " + b);
             Matrix matrixDePontos = new Matrix(valores);
             Matrix pontosDepois = rotacao.multiplicacaoMatrix(matrixDePontos);
             //System.out.println("MATRIXPONTOS DEPOIS = " + pontosDepois);
-            System.out.println(pontosDepois);
-            b.setPos_x( pontosDepois.Vetorize()[0] );
-            b.setPos_y( pontosDepois.Vetorize()[1] );
-            b.setPos_z( pontosDepois.Vetorize()[2] );
+            //System.out.println(pontosDepois);
+            b.setPosXFIXO(pontosDepois.Vetorize()[0] );
+            b.setPosYFIXO(pontosDepois.Vetorize()[1] );
+            b.setPosZFIXO(pontosDepois.Vetorize()[2] );
             //System.out.println("PONTOS DEPOIS = " + b);
             ultimoVertex = b;
         }
@@ -277,14 +277,34 @@ public class PolygonGenerator {
         edgeLista.add(ba);
         retorno = new Polygon(vertexLista,edgeLista,faceLista);
         retorno.setBase( new Polygon(retorno) );
-        System.out.println("FINAL = " + retorno.get3DVertexMatrix());
+        
         Vertex A = retorno.vertex_list.get(0);
         Vertex B = retorno.vertex_list.get(1);
+        double distancia = Vertex.distanciaEntreDoisVetores(A, B);
+        
+        Vertex retornoCG = retorno.base.calculateCG();
+        Matrix translacao1 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(-retornoCG.getPosXDummy(), -retornoCG.getPosYDummy(), -retornoCG.getPosZDummy()));
+        Matrix escala1 = new Matrix( Transform_package.TransformationPrimitives.get3Dscale((1.00/distancia), (1.00/distancia), (1.00/distancia)));
+        Matrix translacao2 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(centrox, centroy, centroz));
+        Matrix escala2 = new Matrix( Transform_package.TransformationPrimitives.get3Dscale(tamanhoLado, tamanhoLado, tamanhoLado));
+        List< Matrix > operacoes = new ArrayList<>();
+        operacoes.add(translacao1);
+        operacoes.add(escala1);
+        operacoes.add(escala2);
+        operacoes.add(translacao2);
+        Matrix finalMatrix = Matrix.concatenacao(operacoes);
+        Matrix depoisOperacoes = finalMatrix.multiplicacaoMatrix(retorno.get3DVertexMatrixDummy());
+        retorno.set3DVertexMatrixRoot(depoisOperacoes);
+        //System.out.println("FINAL = " + retorno.get3DVertexMatrix());
         Vertex C = retorno.vertex_list.get(2);
+        
+        System.out.println("BASE ROOT = " + retorno.get3DVertexMatrixRoot());
+        System.out.println("BASE MVOEL = " +  retorno.get3DVertexMatrixDummy());
         
         System.out.println("Distancia AB = " + Vertex.distanciaEntreDoisVetores(A, B));
         System.out.println("Distancia BC = " + Vertex.distanciaEntreDoisVetores(B, C));
         System.out.println("Distancia CA = " + Vertex.distanciaEntreDoisVetores(C, A));
+        System.out.println("CG = " + retornoCG);
         
         return(retorno);
     }

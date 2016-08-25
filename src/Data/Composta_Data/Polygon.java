@@ -6,6 +6,9 @@
 package Data.Composta_Data;
 
 import Data.Base_Data.*;
+import Generator.Extrusao;
+import Modificadores.BendConstraints;
+import Modificadores.Blend;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +28,18 @@ public class Polygon {
     public Vertex cg = null;
     public Vertex alvo = null;
     
+    public double fatorBevel = 1.00;
+    public double fatorBend = 0.00;
+    public double fatorTwist = 0.00;
+    public BendConstraints constante = BendConstraints.XPlus;
+    
+    public CGEnum calculoDaCG = CGEnum.MEDIASDOSPONTOS;
+    
+    private Matrix operacoes;
+    
     public Polygon()
     {
+        operacoes = new Matrix(Matrix.MATRIXBASICA);
         vertex_list = new ArrayList<>();
         edge_list = new ArrayList<>();
         face_list = new ArrayList<>();
@@ -34,6 +47,7 @@ public class Polygon {
     
     public Polygon( List< Vertex > vertex_list , List< Edge > edge_list , List< Face > face_list )
     {
+        operacoes = new Matrix(Matrix.MATRIXBASICA);
         this.vertex_list = vertex_list;
         this.edge_list = edge_list;
         this.face_list = face_list;
@@ -48,6 +62,33 @@ public class Polygon {
      */
     public Polygon( Polygon outro )
     {
+        if (outro.operacoes != null)
+        {
+            operacoes = new Matrix(outro.operacoes);
+        }
+        else
+        {
+            operacoes = new Matrix(Matrix.MATRIXBASICA);
+        }
+        
+        if (outro.base != null)
+        {
+            this.base = new Polygon( outro.base );
+        }
+        else
+        {
+            this.base = null;
+        }
+        
+        if (outro.alvo != null)
+        {
+            this.alvo = new Vertex(outro.alvo);
+        }
+        else
+        {
+            this.alvo = null;
+        }
+        
         List< Vertex > novosVertex = new ArrayList<>();
         
         List< Edge > novasEdges = new ArrayList<>();
@@ -146,37 +187,158 @@ public class Polygon {
     }
     //fim metodos relacionados a faces
     
+    public void adicionarOperacoesGeometricas(Matrix operacaoAplicada)
+    {
+        System.out.println("antesDeOperacao = " + operacoes);
+        System.out.println("operacaoAplicada = " + operacaoAplicada);
+        this.operacoes = operacaoAplicada.multiplicacaoMatrix(this.operacoes);
+        System.out.println("depoisDeOperacao = " + operacoes);
+    }
+    
+    protected void aplicarOperacoesGeometricas()
+    {
+        System.out.println("pontos antes da operacao OG : " + this.get3DVertexMatrixDummy());
+        System.out.println("Operacao feita : " + operacoes);
+        this.set3DVertexMatrixDummy( this.operacoes.multiplicacaoMatrix( this.get3DVertexMatrixDummy() ) );
+        System.out.println("pontos depois da Operacao OG :" + this.get3DVertexMatrixDummy());
+    }
+    
+    protected void aplicarModificadores()
+    {
+        //System.out.println("------------EM APLICAR MODIFICADORES-------------------");
+        //System.out.println("QUANTIA DE NIVEIS EXTRUSAO = " + this.segmentos.size());
+        this.set3DVertexMatrixDummy( this.get3DVertexMatrixRoot() );
+        //System.out.println("Matrix root antes : " + this.get3DVertexMatrixRoot());
+        //System.out.println("Matrix dummy antes : " + this.get3DVertexMatrixDummy());
+        //System.out.println("Base antes Root : " + this.base.get3DVertexMatrixRoot());
+        //System.out.println("Base antes Dummy : " + this.base.get3DVertexMatrixDummy());
+        int i=0;
+        /*
+        for (Polygon poligono : this.segmentos)
+        {
+            System.out.println("Segmento Root " + i + ":" + poligono.get3DVertexMatrixRoot());
+            System.out.println("Segmento Dummy " + i + ":" + poligono.get3DVertexMatrixDummy());
+            i++;
+        }
+        */
+        //System.out.println("antes de aplicar modificadores = " + this.get3DVertexMatrixDummy());
+        Polygon poligonoResegmentado = Extrusao.reSegmentar(this, this.segmentos.size()-1);
+        this.refresh(poligonoResegmentado);
+        Blend.blendPolygon(this, this.fatorBevel, this.fatorTwist, this.fatorBend, this.constante);
+        //System.out.println("depois de aplicar modificadores " + this.get3DVertexMatrixDummy());
+        //System.out.println("Base depois : " + this.base.get3DVertexMatrixRoot());
+        //System.out.println("Base depois Dummy : " + this.base.get3DVertexMatrixDummy());
+        i=0;
+        /*
+        for (Polygon poligono : this.segmentos)
+        {
+            System.out.println("Segmento " + i + ":" + poligono.get3DVertexMatrixRoot());
+            System.out.println("Segmento Dummy " + i + ":" + poligono.get3DVertexMatrixDummy());
+            i++;
+        }
+        */
+        //System.out.println("Matrix dummy depois : " + this.get3DVertexMatrixDummy());
+        //System.out.println("Matrix root Depois : " + this.get3DVertexMatrixRoot());
+    }
+    
+    public Vertex calculateCG()
+    {
+        switch (calculoDaCG)
+        {
+            case BOUNDING_BOX :
+                Double XMax=0.00,XMin=0.00,YMax=0.00,YMin=0.00,ZMax=0.00,ZMin=0.00;
+                boolean primeira_vez = true;
+                for (Vertex vertex : vertex_list)
+                {
+                    Double x_local = vertex.getPosXRoot();
+                    Double y_local = vertex.getPosYRoot();
+                    Double z_local = vertex.getPosZRoot();
+
+                    if (primeira_vez)
+                    {
+                        primeira_vez = false;
+                        XMax = x_local;
+                        XMin = x_local;
+                        YMax = y_local;
+                        YMin = y_local;
+                        ZMax = z_local;
+                        ZMin = z_local;
+                    }
+                    else
+                    {
+                        if (x_local > XMax)
+                        {
+                            XMax = x_local;
+                        }
+
+                        if (x_local < XMin)
+                        {
+                            XMin = x_local;
+                        }
+
+                        if (y_local > YMax)
+                        {
+                            YMax = y_local;
+                        }
+
+                        if (y_local < YMin)
+                        {
+                            YMin = y_local;
+                        }
+
+                        if (z_local > ZMax)
+                        {
+                            ZMax = z_local;
+                        }
+
+                        if (z_local < ZMin)
+                        {
+                            ZMin = z_local;
+                        }
+
+                    }
+                }
+
+                Double x_final = (XMax+XMin)/2.00;
+                Double y_final = (YMax+YMin)/2.00;
+                Double z_final = (ZMax+ZMin)/2.00;
+
+                return( new Vertex(x_final,y_final,z_final) );
+            case MEDIASDOSPONTOS :
+                //System.out.println("quantia de pontos = " + vertex_list.size());
+                double xSomado = 0.00;
+                double ySomado = 0.00;
+                double zSomado = 0.00;
+                int n = vertex_list.size();
+                for (Vertex vertex : vertex_list)
+                {
+                    double x_local = vertex.getPosXRoot();
+                    double y_local = vertex.getPosYRoot();
+                    double z_local = vertex.getPosZRoot();
+                    
+                    xSomado = xSomado + x_local;
+                    ySomado = ySomado + y_local;
+                    zSomado = zSomado + z_local;
+                    //System.out.println("Vertex = " + vertex + "\nSomaX = " + xSomado + ",ySoma = " + ySomado + ",zSoma = " + zSomado);
+                }
+                
+                Vertex retorno = new Vertex(Constantes.aproximador(xSomado/(n+0.00)) , Constantes.aproximador(ySomado/(n+0.00)) , Constantes.aproximador(zSomado/(n+0.00)));
+                //System.out.println("Resultado = " + retorno);
+                return(retorno);
+            default :
+                throw new IllegalArgumentException();
+        }
+    }
+    
+    //<editor-fold defaultstate="collapsed" desc="setter and getters">
+    
+        
     public void setBase(Polygon poly)
     {
         base = poly;
     }
-    
-    public void printMe()
-    {
-        int i;
-        System.out.print("Vertexes:");
-        for (i=0;i<vertex_list.size();i++)
-        {
-            vertex_list.get(i).printMe();
-            System.out.print(" ");
-        }
-        System.out.println("");
-        System.out.println("Edges:");
-        for (i=0;i<edge_list.size();i++)
-        {
-            edge_list.get(i).printMe();
-            System.out.print(" ");   
-        }
-        System.out.println("");
-        System.out.println("Faces:");
-        for (i=0;i<face_list.size();i++)
-        {
-            face_list.get(i).printMe();
-        }
-        System.out.println("\n");
-    }
-    
-    public void set3DVertexMatrix(Matrix pontos)
+
+    public void set3DVertexMatrixDummy(Matrix pontos)
     {
         Double[][] valores = pontos.toRawMatrix();
         
@@ -191,9 +353,9 @@ public class Polygon {
             Double pos_y = valores[1][j];
             Double pos_z = valores[2][j];
 
-            local.setPos_x(pos_x);
-            local.setPos_y(pos_y);
-            local.setPos_z(pos_z);
+            local.setPosXDummy(pos_x);
+            local.setPosYDummy(pos_y);
+            local.setPosZDummy(pos_z);
             
             
             //System.out.println("vertex depois " + "j = " + local);
@@ -201,7 +363,7 @@ public class Polygon {
         }
     }
     
-    public void set2DVertexMatrix(Matrix pontos)
+    public void set3DVertexMatrixRoot(Matrix pontos)
     {
         Double[][] valores = pontos.toRawMatrix();
         
@@ -211,16 +373,22 @@ public class Polygon {
         {
 
             Vertex local = vertex_list.get(j);
+            //System.out.println("vertex antes " + "j = " + local);
             Double pos_x = valores[0][j];
             Double pos_y = valores[1][j];
+            Double pos_z = valores[2][j];
 
-            local.setPos_x(pos_x);
-            local.setPos_y(pos_y);
+            local.setPosXFIXO(pos_x);
+            local.setPosYFIXO(pos_y);
+            local.setPosZFIXO(pos_z);
+            
+            
+            //System.out.println("vertex depois " + "j = " + local);
 
         }
     }
     
-    public Matrix get3DVertexMatrix()
+    public Matrix get3DVertexMatrixDummy()
     {
         int numero_colunas = vertex_list.size();
         Double[][] retorno = new Double[4][numero_colunas];
@@ -229,9 +397,9 @@ public class Polygon {
         {
 
             Vertex local = vertex_list.get(j);
-            Double pos_x = local.getPos_x();
-            Double pos_y = local.getPos_y();
-            Double pos_z = local.getPos_z();
+            Double pos_x = local.getPosXDummy();
+            Double pos_y = local.getPosYDummy();
+            Double pos_z = local.getPosZDummy();
 
             retorno[0][j] = pos_x;
             retorno[1][j] = pos_y;
@@ -244,21 +412,23 @@ public class Polygon {
         return(matrix_de_retorno);
     }
     
-    public Matrix get2DVertexMatrix()
+    public Matrix get3DVertexMatrixRoot()
     {
         int numero_colunas = vertex_list.size();
-        Double[][] retorno = new Double[3][numero_colunas];
+        Double[][] retorno = new Double[4][numero_colunas];
         
         for (int j=0;j<numero_colunas;j++)
         {
 
             Vertex local = vertex_list.get(j);
-            Double pos_x = local.getPos_x();
-            Double pos_y = local.getPos_y();
+            Double pos_x = local.getPosXRoot();
+            Double pos_y = local.getPosYRoot();
+            Double pos_z = local.getPosZRoot();
 
             retorno[0][j] = pos_x;
             retorno[1][j] = pos_y;
-            retorno[2][j] = 1.00;
+            retorno[2][j] = pos_z;
+            retorno[3][j] = 1.00;
 
         }
         
@@ -266,122 +436,10 @@ public class Polygon {
         return(matrix_de_retorno);
     }
     
-    /**
-     * QUEBRADO
-     * @param transform_matrix 
-     */
-    public void apply3DTransform(Matrix transform_matrix)
-    {
-        
-        Matrix pontos_iniciais = get3DVertexMatrix();
-        
-        Matrix pontos_finais = transform_matrix.multiplicacaoMatrix(pontos_iniciais);
-        
-        Double[][] valores = pontos_finais.toRawMatrix();
-        
-        int numero_colunas = vertex_list.size();
-        
-        for (int j=0;j<numero_colunas;j++)
-        {
-
-            Vertex local = vertex_list.get(j);
-            Double pos_x = valores[j][0];
-            Double pos_y = valores[j][1];
-            Double pos_z = valores[j][2];
-
-            local.setPos_x(pos_x);
-            local.setPos_y(pos_y);
-            local.setPos_z(pos_z);
-
-        }
-        
+    
+    public Matrix getOperacoes() {
+        return operacoes;
     }
     
-    public Vertex calculateCG()
-    {
-        Double XMax=0.00,XMin=0.00,YMax=0.00,YMin=0.00,ZMax=0.00,ZMin=0.00;
-        boolean primeira_vez = true;
-        for (Vertex vertex : vertex_list)
-        {
-            Double x_local = vertex.getPos_x();
-            Double y_local = vertex.getPos_y();
-            Double z_local = vertex.getPos_z();
-            
-            if (primeira_vez)
-            {
-                primeira_vez = false;
-                XMax = x_local;
-                XMin = x_local;
-                YMax = y_local;
-                YMin = y_local;
-                ZMax = z_local;
-                ZMin = z_local;
-            }
-            else
-            {
-                if (x_local > XMax)
-                {
-                    XMax = x_local;
-                }
-                
-                if (x_local < XMin)
-                {
-                    XMin = x_local;
-                }
-                
-                if (y_local > YMax)
-                {
-                    YMax = y_local;
-                }
-                
-                if (y_local < YMin)
-                {
-                    YMin = y_local;
-                }
-                
-                if (z_local > ZMax)
-                {
-                    ZMax = z_local;
-                }
-                
-                if (z_local < ZMin)
-                {
-                    ZMin = z_local;
-                }
-                
-            }
-        }
-        
-        Double x_final = (XMax+XMin)/2.00;
-        Double y_final = (YMax+YMin)/2.00;
-        Double z_final = (ZMax+ZMin)/2.00;
-        
-        return( new Vertex(x_final,y_final,z_final) );
-    }
-    
-    public void apply2DTransform(Matrix transform_matrix)
-    {
-        
-        Matrix pontos_iniciais = get2DVertexMatrix();
-        
-        Matrix pontos_finais = transform_matrix.multiplicacaoMatrix(pontos_iniciais);
-        
-        Double[][] valores = pontos_finais.toRawMatrix();
-        
-        int numero_colunas = vertex_list.size();
-        
-        for (int j=0;j<numero_colunas;j++)
-        {
-
-            Vertex local = vertex_list.get(j);
-            Double pos_x = valores[j][0];
-            Double pos_y = valores[j][1];
-
-            local.setPos_x(pos_x);
-            local.setPos_y(pos_y);
-
-        }
-        
-    }
-    
+    //</editor-fold>
 }

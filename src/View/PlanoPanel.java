@@ -493,14 +493,14 @@ public class PlanoPanel extends javax.swing.JPanel {
      */
     private void carregarValoresTF()
     {
-        tfUMax.setText(String.format(Locale.US,"%.4f", panel.map.UMax));
-        tfUMin.setText(String.format(Locale.US,"%.4f", panel.map.UMin));
-        tfVMax.setText(String.format(Locale.US,"%.4f", panel.map.VMax));
-        tfVMin.setText(String.format(Locale.US,"%.4f", panel.map.VMin));
-        tfXMax.setText(String.format(Locale.US,"%.4f", panel.map.XMax));
-        tfXMin.setText(String.format(Locale.US,"%.4f", panel.map.XMin));
-        tfYMax.setText(String.format(Locale.US,"%.4f", panel.map.YMax));
-        tfYMin.setText(String.format(Locale.US,"%.4f", panel.map.YMin));
+        tfUMax.setText(String.format(Locale.US,"%.4f", panel.map.getUMax()));
+        tfUMin.setText(String.format(Locale.US,"%.4f", panel.map.getUMin()));
+        tfVMax.setText(String.format(Locale.US,"%.4f", panel.map.getVMax()));
+        tfVMin.setText(String.format(Locale.US,"%.4f", panel.map.getVMin()));
+        tfXMax.setText(String.format(Locale.US,"%.4f", panel.map.getXMax()));
+        tfXMin.setText(String.format(Locale.US,"%.4f", panel.map.getXMin()));
+        tfYMax.setText(String.format(Locale.US,"%.4f", panel.map.getYMax()));
+        tfYMin.setText(String.format(Locale.US,"%.4f", panel.map.getYMin()));
     }
     
     /**
@@ -552,15 +552,15 @@ public class PlanoPanel extends javax.swing.JPanel {
             panel.tipoProjecao = ProjecaoEnum.TOP;
         }
         try {
-            panel.map.UMax = Double.parseDouble(tfUMax.getText());
-            panel.map.UMin = Double.parseDouble(tfUMin.getText());
-            panel.map.VMax = Double.parseDouble(tfVMax.getText());
-            panel.map.VMin = Double.parseDouble(tfVMin.getText());
+            panel.map.setUMax( Double.parseDouble(tfUMax.getText()) );
+            panel.map.setUMin( Double.parseDouble(tfUMin.getText()) );
+            panel.map.setVMax( Double.parseDouble(tfVMax.getText()) );
+            panel.map.setVMin( Double.parseDouble(tfVMin.getText()) );
             
-            panel.map.XMax = Double.parseDouble(tfXMax.getText());
-            panel.map.XMin = Double.parseDouble(tfXMin.getText());
-            panel.map.YMax = Double.parseDouble(tfYMax.getText());
-            panel.map.YMin = Double.parseDouble(tfYMin.getText());
+            panel.map.setXMax( Double.parseDouble(tfXMax.getText()) );
+            panel.map.setXMin( Double.parseDouble(tfXMin.getText()) );
+            panel.map.setYMax( Double.parseDouble(tfYMax.getText()) );
+            panel.map.setYMin( Double.parseDouble(tfYMin.getText()) );
         }
         catch(ArithmeticException e)
         {

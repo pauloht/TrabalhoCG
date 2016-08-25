@@ -11,6 +11,9 @@ package Data.Base_Data;
  */
 public class Vertex {
     double pos_x,pos_y,pos_z;
+    
+    double posXMovel,posYMovel,posZMovel;
+    
     Edge edge;
     
     public Vertex(){
@@ -23,6 +26,10 @@ public class Vertex {
         pos_x=x;
         pos_y=y;
         pos_z=z;
+        
+        posXMovel = pos_x;
+        posYMovel = pos_y;
+        posZMovel = pos_z;
         edge = null;
     }
     
@@ -31,6 +38,11 @@ public class Vertex {
         pos_x = outro.pos_x;
         pos_y = outro.pos_y;
         pos_z = outro.pos_z;
+        
+        posXMovel = outro.posXMovel;
+        posYMovel = outro.posYMovel;
+        posZMovel = outro.posZMovel;
+        
         edge = null;
     }
     
@@ -38,29 +50,6 @@ public class Vertex {
     {
         this(x,y,z);
         this.edge = edge;
-    }
-    
-    public Double[] getPosArray()
-    {
-        Double[] vet = new Double[3];
-        vet[0] = pos_x;
-        vet[1] = pos_y;
-        vet[2] = pos_z;
-        return (vet);
-    }
-    
-    public void setPosArray(Double[] vet)
-    {
-        if (vet.length<=3)
-        {
-            pos_x = vet[0];
-            pos_y = vet[1];
-            pos_z = vet[2];
-        }
-        else
-        {
-            //donothing
-        }
     }
     
     public Edge getEdge()
@@ -78,28 +67,61 @@ public class Vertex {
         System.out.print("("+pos_x+","+pos_y+","+pos_z+")");
     }
 
-    public Double getPos_x() {
+    public Double getPosXDummy() {
+        return posXMovel;
+    }
+    
+    public Double getPosXRoot()
+    {
         return pos_x;
     }
 
-    public void setPos_x(Double pos_x) {
+    public void setPosXFIXO(Double pos_x) {
         this.pos_x = pos_x;
+        this.posXMovel = pos_x;
+    }
+    
+    public void setPosXDummy(Double pos_x)
+    {
+        this.posXMovel = pos_x;
     }
 
-    public Double getPos_y() {
+    public Double getPosYDummy() {
+        return posYMovel;
+    }
+    
+    public Double getPosYRoot()
+    {
         return pos_y;
     }
 
-    public void setPos_y(Double pos_y) {
+    public void setPosYFIXO(Double pos_y) {
         this.pos_y = pos_y;
+        this.posYMovel = pos_y;
+    }
+    
+    public void setPosYDummy(Double pos_y)
+    {
+        this.posYMovel = pos_y;
     }
 
-    public Double getPos_z() {
+    public Double getPosZRoot()
+    {
         return pos_z;
     }
+    
+    public Double getPosZDummy() {
+        return posZMovel;
+    }
 
-    public void setPos_z(Double pos_z) {
+    public void setPosZFIXO(Double pos_z) {
         this.pos_z = pos_z;
+        this.posZMovel = pos_z;
+    }
+    
+    public void setPosZDummy(Double pos_z)
+    {
+        this.posZMovel = pos_z;
     }
 
     public MyVector toMyVector() {
@@ -109,13 +131,13 @@ public class Vertex {
 
     public static double distanciaEntreDoisVetores(Vertex a,Vertex b)
     {
-        double aX = a.getPos_x();
-        double aY = a.getPos_y();
-        double aZ = a.getPos_z();
+        double aX = a.getPosXDummy();
+        double aY = a.getPosYDummy();
+        double aZ = a.getPosZDummy();
         
-        double bX = b.getPos_x();
-        double bY = b.getPos_y();
-        double bZ = b.getPos_z();
+        double bX = b.getPosXDummy();
+        double bY = b.getPosYDummy();
+        double bZ = b.getPosZDummy();
         
         double distancia = Math.sqrt( (aX - bX)*(aX - bX) + (aY - bY)*(aY - bY) + (aZ - bZ)*(aZ - bZ) );
         return( distancia );
@@ -156,7 +178,7 @@ public class Vertex {
 
     @Override
     public String toString() {
-        return "Vertex{" + "pos_x=" + pos_x + ", pos_y=" + pos_y + ", pos_z=" + pos_z + '}';
+        return "VertexRoot{" + "pos_x=" + pos_x + ", pos_y=" + pos_y + ", pos_z=" + pos_z + '}';
     }
     
     

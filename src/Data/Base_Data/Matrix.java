@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class Matrix {
     ArrayList< ArrayList < Double > > matrix;
+    public static final int MATRIXBASICA = -1;
     //matrix.get(i).get(j) pega elemento na coluna i linha j
     
     public Matrix()
@@ -23,22 +24,36 @@ public class Matrix {
     
     public Matrix(int aux)
     {
-        matrix = new ArrayList<>(aux);
+        this();
+        if (aux != MATRIXBASICA)
+        {
+            matrix = new ArrayList<>(aux);
+        }
+        else
+        {
+            Double[][] inicial = new Double[4][4];
+            for (int i=0;i<4;i++)
+            {
+                for (int j=0;j<4;j++)
+                {
+                    if (i==j)
+                    {
+                        inicial[i][j] = 1.00;
+                    }
+                    else
+                    {
+                        inicial[i][j] = 0.00;
+                    }
+                }
+            }
+            setarValoresDaMatrix(inicial);
+        }
     }
     
     public Matrix(Double[][] other_matrix)
     {
         this();
-        for (int i=0;i<other_matrix.length;i++)
-        {
-            ArrayList< Double > new_array = new ArrayList<>();
-            for (int j=0;j<other_matrix[i].length;j++)
-            {
-                new_array.add(new Double(other_matrix[i][j]));
-                //System.out.println("Adicionando " + other_matrix[i][j]);
-            }
-            this.matrix.add(new_array);
-        }
+        setarValoresDaMatrix(other_matrix);
         
     }
     
@@ -52,6 +67,20 @@ public class Matrix {
             for (int j=0;j<raw_matrix[i].length;j++)
             {
                 new_array.add(new Double(raw_matrix[i][j]));
+                //System.out.println("Adicionando " + other_matrix[i][j]);
+            }
+            this.matrix.add(new_array);
+        }
+    }
+    
+    public void setarValoresDaMatrix(Double[][] valores)
+    {
+        for (int i=0;i<valores.length;i++)
+        {
+            ArrayList< Double > new_array = new ArrayList<>();
+            for (int j=0;j<valores[i].length;j++)
+            {
+                new_array.add(new Double(valores[i][j]));
                 //System.out.println("Adicionando " + other_matrix[i][j]);
             }
             this.matrix.add(new_array);

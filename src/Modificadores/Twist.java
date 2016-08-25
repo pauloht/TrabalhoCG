@@ -24,11 +24,11 @@ public class Twist {
         {
             Polygon local = poligono.segmentos.get(i);
             Vertex cg = local.cg;
-            Matrix translacao1 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(-cg.getPos_x(), -cg.getPos_y(), -cg.getPos_z()) );
+            Matrix translacao1 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(-cg.getPosXDummy(), -cg.getPosYDummy(), -cg.getPosZDummy()) );
             Matrix rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateY(valorEmRadianos*(i+1)) );
             //System.out.println("valor deg = " + grausPorSegmento  + ",valor em rad = " + valorEmRadianos);
             //System.out.println("matrix de rotacao = " + rotacao);
-            Matrix translacao2 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(+cg.getPos_x(), +cg.getPos_y(), +cg.getPos_z()) );
+            Matrix translacao2 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(+cg.getPosXDummy(), +cg.getPosYDummy(), +cg.getPosZDummy()) );
             
             List< Matrix > operacoes = new ArrayList<>();
             //System.out.println("localPoly = " + local.nome);
@@ -41,8 +41,8 @@ public class Twist {
             
             Matrix concatenada = Matrix.concatenacao(operacoes);
             //System.out.println("Matrix concatenada = " + concatenada);
-            Matrix pontosDepois = concatenada.multiplicacaoMatrix( local.get3DVertexMatrix() );
-            local.set3DVertexMatrix( pontosDepois );
+            Matrix pontosDepois = concatenada.multiplicacaoMatrix( local.get3DVertexMatrixDummy() );
+            local.set3DVertexMatrixDummy( pontosDepois );
         }
     }
 }

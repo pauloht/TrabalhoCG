@@ -17,6 +17,7 @@ import Data.Composta_Data.Polygon;
 public class Extrusao {
     public static Polygon gerarPolygonoExtrudido(Polygon base,int numeroSegmentos,Vertex centroDaBase,double translacaoX,double translacaoY,double translacaoZ)
     {
+        //System.out.println("----FAZENDO EXTRUSAO EM " + numeroSegmentos + " NIVEIS!!!!--------");
         if (base.base == null)
         {
             return(null);
@@ -24,7 +25,7 @@ public class Extrusao {
         Polygon retorno = new Polygon(base);
         Polygon baseLocal = retorno;
         retorno.base = new Polygon( retorno );
-        Vertex alvo = new Vertex(centroDaBase.getPos_x()+translacaoX,centroDaBase.getPos_y()+translacaoY,centroDaBase.getPos_z()+translacaoZ);
+        Vertex alvo = new Vertex(centroDaBase.getPosXRoot()+translacaoX,centroDaBase.getPosYRoot()+translacaoY,centroDaBase.getPosZRoot()+translacaoZ);
         retorno.alvo = alvo;
         int numeroExtrusoes = numeroSegmentos + 1;
         double translacaoXParcial = translacaoX/numeroExtrusoes;
@@ -61,9 +62,9 @@ public class Extrusao {
                 baseLocal.edge_list.add(novaEdge);
             }
             Matrix translacaoMatrix = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(translacaoXParcial, translacaoYParcial, translacaoZParcial) );
-            Matrix depoisTranslacao = translacaoMatrix.multiplicacaoMatrix(extrusao.get3DVertexMatrix());
+            Matrix depoisTranslacao = translacaoMatrix.multiplicacaoMatrix(extrusao.get3DVertexMatrixRoot());
             //System.out.println("depoisTranslacao matrix = " + depoisTranslacao);
-            extrusao.set3DVertexMatrix(depoisTranslacao);
+            extrusao.set3DVertexMatrixRoot(depoisTranslacao);
             //System.out.println("extrusaodepois translacao = " + extrusao.get3DVertexMatrix());
             extrusao.nome = "ExtrusaoNumero " + Integer.toString(j);
             extrusao.cg = extrusao.calculateCG();
@@ -79,21 +80,26 @@ public class Extrusao {
         //System.out.println("fim = " + retorno.get3DVertexMatrix());
         retorno.nome = "PoligonoExtrudido";
         
-        System.out.println("poligono extrudido : " + retorno.get3DVertexMatrix());
+        //System.out.println("poligono extrudido : " + retorno.get3DVertexMatrixRoot());
         retorno.vertex_list.addAll(retorno.base.vertex_list);
-        retorno.vertex_list.add(alvo);
+        retorno.vertex_list.add(retorno.alvo);
         return(retorno);
     }
     
     public static Polygon reSegmentar(Polygon poligono,int numeroSegmentos)
     {
+        //System.out.println("--------FAZENDO RESEGMENTACAO--------------");
+        //System.out.println("Cordenadas poligono ; " + poligono.get3DVertexMatrixDummy());
         Polygon base = poligono.base;
         base.base = new Polygon(base);
         Vertex alvo = poligono.alvo;
         Vertex origem = base.calculateCG();
-        double distanciaX = alvo.getPos_x() - origem.getPos_x();
-        double distanciaY = alvo.getPos_y() - origem.getPos_y();
-        double distanciaZ = alvo.getPos_z() - origem.getPos_z();
+        //System.out.println("base = " + base.calculateCG());
+        //System.out.println("BaseCalculada = " + origem);
+        //System.out.println("alvo = " + alvo);
+        double distanciaX = alvo.getPosXRoot() - origem.getPosXRoot();
+        double distanciaY = alvo.getPosYRoot() - origem.getPosYRoot();
+        double distanciaZ = alvo.getPosZRoot() - origem.getPosZRoot();
         return( gerarPolygonoExtrudido(base, numeroSegmentos, origem, distanciaX, distanciaY, distanciaZ) );
     }
 }

@@ -72,9 +72,9 @@ public class CameraClass {
                                             {0.00,1.00,0.00,0.00},
                                             {0.00,0.00,1.00,0.00},
                                             {0.00,0.00,0.00,1.00}};
-        translacao_matrix[0][3] = -this.getVrp().getPos_x();
-        translacao_matrix[1][3] = -this.getVrp().getPos_y();
-        translacao_matrix[2][3] = -this.getVrp().getPos_z();
+        translacao_matrix[0][3] = -this.getVrp().getPosXDummy();
+        translacao_matrix[1][3] = -this.getVrp().getPosYDummy();
+        translacao_matrix[2][3] = -this.getVrp().getPosZDummy();
         
         Matrix matrix_de_translacao = new Matrix(translacao_matrix);
         

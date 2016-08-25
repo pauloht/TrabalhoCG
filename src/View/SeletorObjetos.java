@@ -12,6 +12,7 @@ import Generator.Extrusao;
 import Modificadores.Bend;
 import Modificadores.BendConstraints;
 import Modificadores.Bevel;
+import Modificadores.Blend;
 import Modificadores.Twist;
 import Transform_package.TransformTipo;
 import java.util.ArrayList;
@@ -143,10 +144,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
             Double valorZ = valores[2];
             
             Matrix translacaoMatrix = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(valorX, valorY, valorZ) );
-            //System.out.println("pontos antes da translacao = " + poligonoSelecionado.get3DVertexMatrix());
-            Matrix depoisDaTranslacao = translacaoMatrix.multiplicacaoMatrix(poligonoSelecionado.get3DVertexMatrix());
-            //System.out.println("depois = " + depoisDaTranslacao);
-            poligonoSelecionado.set3DVertexMatrix(depoisDaTranslacao);
+            poligonoSelecionado.adicionarOperacoesGeometricas(translacaoMatrix);
             JanelaPrincipal.janela.updateExterno();
             taAvisos.setText("TranslacaoFeita!");
         }
@@ -165,11 +163,8 @@ public class SeletorObjetos extends javax.swing.JPanel {
             Double valorY = valores[1];
             Double valorZ = valores[2];
             
-            Matrix translacaoMatrix = new Matrix( Transform_package.TransformationPrimitives.get3Dscale(valorX, valorY, valorZ) );
-            //System.out.println("pontos antes da escala = " + poligonoSelecionado.get3DVertexMatrix());
-            Matrix depoisDaEscala = translacaoMatrix.multiplicacaoMatrix(poligonoSelecionado.get3DVertexMatrix());
-            //System.out.println("depois = " + depoisDaEscala);
-            poligonoSelecionado.set3DVertexMatrix(depoisDaEscala);
+            Matrix escalaMatrix = new Matrix( Transform_package.TransformationPrimitives.get3Dscale(valorX, valorY, valorZ) );
+            poligonoSelecionado.adicionarOperacoesGeometricas(escalaMatrix);
             JanelaPrincipal.janela.updateExterno();
             taAvisos.setText("EscalaFeita!");
         }
@@ -198,12 +193,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
             lista.add(rotacaoZ);
             
             Matrix rotacao = Matrix.concatenacao( lista );
-            
-            //System.out.println("Matrix de rotacao = " + rotacao);
-            //System.out.println("pontos antes da rotacao = " + poligonoSelecionado.get3DVertexMatrix());
-            Matrix depoisDaRotacao = rotacao.multiplicacaoMatrix(poligonoSelecionado.get3DVertexMatrix());
-            //System.out.println("depois = " + depoisDaRotacao);
-            poligonoSelecionado.set3DVertexMatrix(depoisDaRotacao);
+            poligonoSelecionado.adicionarOperacoesGeometricas(rotacao);
             JanelaPrincipal.janela.updateExterno();
             taAvisos.setText("RotacaoFeita!");
         }
@@ -814,6 +804,11 @@ public class SeletorObjetos extends javax.swing.JPanel {
         jLabel1.setText("Nome :");
 
         tfNomePoligono.setText("Nome");
+        tfNomePoligono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfNomePoligonoActionPerformed(evt);
+            }
+        });
 
         btDeletar.setText("Deletar");
         btDeletar.addActionListener(new java.awt.event.ActionListener() {
@@ -898,6 +893,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
                 throw new UnsupportedOperationException();
             }
             poligonoSelecionado.refresh(poligonoResegmentado);
+            //aplicarOperacoesModificadoresGenerica();
             JanelaPrincipal.janela.updateExterno();
             taAvisos.setText("Poligono resegmentado!");
         }catch(Exception e)
@@ -908,18 +904,33 @@ public class SeletorObjetos extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tfNumeroSegmentosActionPerformed
 
+    private void aplicarOperacoesModificadoresGenerica()
+    {
+        try{
+            JanelaPrincipal.janela.updateExterno();
+            taAvisos.setText("Modificador aplicado!");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            taAvisos.setText("Erro modificadores!");
+        }
+    }
+    
     private void tfBevelNumerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfBevelNumerActionPerformed
         // TODO add your handling code here:
         try{
             double fatorBevel = Double.parseDouble(tfBevelNumer.getText());
-            Polygon poligonoResegmentado = Extrusao.reSegmentar(poligonoSelecionado, poligonoSelecionado.segmentos.size()-1);
-            poligonoSelecionado.refresh(poligonoResegmentado);
-            Bevel.bevelPolygon(poligonoSelecionado, fatorBevel);
-            JanelaPrincipal.janela.updateExterno();
-            taAvisos.setText("Bevel executado!");
+            poligonoSelecionado.fatorBevel = fatorBevel;
+            aplicarOperacoesModificadoresGenerica();
+            //Polygon poligonoResegmentado = Extrusao.reSegmentar(poligonoSelecionado, poligonoSelecionado.segmentos.size()-1);
+            //poligonoSelecionado.refresh(poligonoResegmentado);
+            //Bevel.bevelPolygon(poligonoSelecionado, fatorBevel);
+            //JanelaPrincipal.janela.updateExterno();
+            //taAvisos.setText("Bevel executado!");
         }catch(Exception e)
         {
-            taAvisos.setText("Erro em bevel resetando.");
+            //taAvisos.setText("Erro em bevel resetando.");
         }
     }//GEN-LAST:event_tfBevelNumerActionPerformed
 
@@ -927,14 +938,16 @@ public class SeletorObjetos extends javax.swing.JPanel {
         // TODO add your handling code here:
         try{
             double fatorTwist = Double.parseDouble(tfTwistValorPorSegmento.getText());
-            Polygon poligonoResegmentado = Extrusao.reSegmentar(poligonoSelecionado, poligonoSelecionado.segmentos.size()-1);
-            poligonoSelecionado.refresh(poligonoResegmentado);
-            Twist.twistPolygon(poligonoSelecionado, fatorTwist);
-            JanelaPrincipal.janela.updateExterno();
-            taAvisos.setText("Bevel executado!");
+            poligonoSelecionado.fatorTwist = fatorTwist;
+            aplicarOperacoesModificadoresGenerica();
+            //Polygon poligonoResegmentado = Extrusao.reSegmentar(poligonoSelecionado, poligonoSelecionado.segmentos.size()-1);
+            //poligonoSelecionado.refresh(poligonoResegmentado);
+            //Twist.twistPolygon(poligonoSelecionado, fatorTwist);
+            //JanelaPrincipal.janela.updateExterno();
+            //taAvisos.setText("Bevel executado!");
         }catch(Exception e)
         {
-            taAvisos.setText("Erro em bevel resetando.");
+            //taAvisos.setText("Erro em bevel resetando.");
         }
     }//GEN-LAST:event_tfTwistValorPorSegmentoActionPerformed
 
@@ -963,15 +976,18 @@ public class SeletorObjetos extends javax.swing.JPanel {
             {
                 throw new IllegalArgumentException();
             }
-            Polygon poligonoResegmentado = Extrusao.reSegmentar(poligonoSelecionado, poligonoSelecionado.segmentos.size()-1);
-            poligonoSelecionado.refresh(poligonoResegmentado);
-            Bend.bendPolygon(poligonoSelecionado, fatorBend, constante);
-            JanelaPrincipal.janela.updateExterno();
-            taAvisos.setText("Bend executado!");
+            poligonoSelecionado.constante = constante;
+            poligonoSelecionado.fatorBend = fatorBend;
+            aplicarOperacoesModificadoresGenerica();
+            //Polygon poligonoResegmentado = Extrusao.reSegmentar(poligonoSelecionado, poligonoSelecionado.segmentos.size()-1);
+            //poligonoSelecionado.refresh(poligonoResegmentado);
+            //Bend.bendPolygon(poligonoSelecionado, fatorBend, constante);
+            //JanelaPrincipal.janela.updateExterno();
+            //taAvisos.setText("Bend executado!");
         }
         catch(Exception e){
-            taAvisos.setText("Falha em bend!.. cancelando operacao");
-            e.printStackTrace();
+            //taAvisos.setText("Falha em bend!.. cancelando operacao");
+            //e.printStackTrace();
         }
     }
     
@@ -1004,6 +1020,19 @@ public class SeletorObjetos extends javax.swing.JPanel {
         // TODO add your handling code here:
         tentarDeletar();
     }//GEN-LAST:event_btDeletarActionPerformed
+
+    private void tfNomePoligonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNomePoligonoActionPerformed
+        // TODO add your handling code here:
+        if (poligonoSelecionado != null)
+        {
+            poligonoSelecionado.nome = tfNomePoligono.getText();
+            taAvisos.setText("Poligono renomeado com sucesso");
+        }
+        else
+        {
+            taAvisos.setText("Poligono nulo erro!");
+        }
+    }//GEN-LAST:event_tfNomePoligonoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

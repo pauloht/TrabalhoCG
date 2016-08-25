@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <NonVisualComponents>
+    <Component class="javax.swing.ButtonGroup" name="bgTipoDeBase">
+    </Component>
+  </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
   </Properties>
@@ -769,7 +773,7 @@
                               <Component id="jPanel10" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btCriar" min="-2" pref="44" max="-2" attributes="0"/>
-                              <EmptySpace pref="12" max="32767" attributes="0"/>
+                              <EmptySpace pref="11" max="32767" attributes="0"/>
                               <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
@@ -796,13 +800,18 @@
                               <Group type="102" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="rbBaseQuadrada" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      <Component id="rbBaseQuadrada1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="jLabel19" pref="198" max="32767" attributes="0"/>
-                                      <Component id="tfTamanhoBase" max="32767" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="rbBaseTriangular" alignment="0" min="-2" max="-2" attributes="0"/>
+                                              <Component id="rbBaseIcosagonal" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                              <Component id="jLabel19" pref="198" max="32767" attributes="0"/>
+                                              <Component id="tfNumeroLados" max="32767" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <Component id="jRadioButton1" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                               </Group>
@@ -813,40 +822,68 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="rbBaseQuadrada" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="rbBaseTriangular" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="rbBaseQuadrada1" min="-2" max="-2" attributes="0"/>
-                                      <Component id="tfTamanhoBase" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="rbBaseIcosagonal" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tfNumeroLados" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace pref="35" max="32767" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="jRadioButton1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace pref="9" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                         </DimensionLayout>
                       </Layout>
                       <SubComponents>
-                        <Component class="javax.swing.JRadioButton" name="rbBaseQuadrada">
+                        <Component class="javax.swing.JRadioButton" name="rbBaseTriangular">
                           <Properties>
+                            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                              <ComponentRef name="bgTipoDeBase"/>
+                            </Property>
                             <Property name="text" type="java.lang.String" value="Base Triangular"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbBaseTriangularActionPerformed"/>
+                          </Events>
                         </Component>
-                        <Component class="javax.swing.JRadioButton" name="rbBaseQuadrada1">
+                        <Component class="javax.swing.JRadioButton" name="rbBaseIcosagonal">
                           <Properties>
+                            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                              <ComponentRef name="bgTipoDeBase"/>
+                            </Property>
                             <Property name="text" type="java.lang.String" value="Base Icosagonal"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbBaseIcosagonalActionPerformed"/>
+                          </Events>
                         </Component>
-                        <Component class="javax.swing.JTextField" name="tfTamanhoBase">
+                        <Component class="javax.swing.JTextField" name="tfNumeroLados">
                           <Properties>
                             <Property name="text" type="java.lang.String" value="jTextField1"/>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfNumeroLadosActionPerformed"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JLabel" name="jLabel19">
                           <Properties>
                             <Property name="horizontalAlignment" type="int" value="0"/>
                             <Property name="text" type="java.lang.String" value="Base tamanho n"/>
                           </Properties>
+                        </Component>
+                        <Component class="javax.swing.JRadioButton" name="jRadioButton1">
+                          <Properties>
+                            <Property name="buttonGroup" type="javax.swing.ButtonGroup" editor="org.netbeans.modules.form.RADComponent$ButtonGroupPropertyEditor">
+                              <ComponentRef name="bgTipoDeBase"/>
+                            </Property>
+                            <Property name="text" type="java.lang.String" value="Personalizado"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jRadioButton1ActionPerformed"/>
+                          </Events>
                         </Component>
                       </SubComponents>
                     </Container>
@@ -1075,6 +1112,7 @@
                         </Component>
                         <Component class="javax.swing.JTextField" name="tfDistanciaX">
                           <Properties>
+                            <Property name="editable" type="boolean" value="false"/>
                             <Property name="text" type="java.lang.String" value="jTextField1"/>
                           </Properties>
                         </Component>
@@ -1109,6 +1147,7 @@
                         </Component>
                         <Component class="javax.swing.JTextField" name="tfDistanciaZ">
                           <Properties>
+                            <Property name="editable" type="boolean" value="false"/>
                             <Property name="text" type="java.lang.String" value="jTextField1"/>
                           </Properties>
                         </Component>

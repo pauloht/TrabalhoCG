@@ -24,42 +24,42 @@ public class Bend {
         for (int i=0;i<numeroSegmentos;i++)
         {
             Polygon local = poligono.segmentos.get(i);
-            Matrix translacao1 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(-cg.getPos_x(), -cg.getPos_y(), -cg.getPos_z()) );
-            Matrix rotacao;
+            Matrix translacao1 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(-cg.getPosXDummy(), -cg.getPosYDummy(), -cg.getPosZDummy()) );
+            Matrix rotacaoBend;
             switch (constanteBend)
             {
                 case XMinus :
-                    rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateZ(-valorEmRadianos*(i+1)) );
+                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateZ(valorEmRadianos*(i+1)) );
                     break;
                 case XPlus :
-                    rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateZ(valorEmRadianos*(i+1)) );
+                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateZ(-valorEmRadianos*(i+1)) );
                     break;
                 case ZMinus :
-                    rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(-valorEmRadianos*(i+1)) );
+                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(valorEmRadianos*(i+1)) );
                     break;
                 case ZPlus :
-                    rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(valorEmRadianos*(i+1)) );
+                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(-valorEmRadianos*(i+1)) );
                     break;
                 default : 
                     throw new IllegalArgumentException();
             }
             //System.out.println("valor deg = " + grausPorSegmento  + ",valor em rad = " + valorEmRadianos);
             //System.out.println("matrix de rotacao = " + rotacao);
-            Matrix translacao2 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(+cg.getPos_x(), +cg.getPos_y(), +cg.getPos_z()) );
+            Matrix translacao2 = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(+cg.getPosXDummy(), +cg.getPosYDummy(), +cg.getPosZDummy()) );
             
             List< Matrix > operacoes = new ArrayList<>();
             //System.out.println("localPoly = " + local.nome);
             //System.out.println("cg = " + cg);
             //System.out.println("local cordenadas antes : " + local.get3DVertexMatrix());
             operacoes.add(translacao1);
-            operacoes.add(rotacao);
+            operacoes.add(rotacaoBend);
             operacoes.add(translacao2);
             
             
             Matrix concatenada = Matrix.concatenacao(operacoes);
             //System.out.println("Matrix concatenada = " + concatenada);
-            Matrix pontosDepois = concatenada.multiplicacaoMatrix( local.get3DVertexMatrix() );
-            local.set3DVertexMatrix( pontosDepois );
+            Matrix pontosDepois = concatenada.multiplicacaoMatrix( local.get3DVertexMatrixDummy() );
+            local.set3DVertexMatrixDummy( pontosDepois );
         }
     }
 }

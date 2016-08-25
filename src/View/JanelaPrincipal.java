@@ -5,24 +5,20 @@
  */
 package View;
 
-import Data.Base_Data.Matrix;
+import Data.Base_Data.Constantes;
 import Data.Base_Data.Vertex;
 import Data.Composta_Data.Polygon;
 import Data.Composta_Data.SuperPolygon;
 import Generator.Extrusao;
 import Generator.PolygonGenerator;
-import Modificadores.Bevel;
 import Pipeline.CameraPacote.CameraClass;
 import Pipeline.Projecao.ProjecaoEnum;
 import ViewComponents.MyJPanel;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 /**
  *
@@ -95,9 +91,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         camera.setVrp(new Vertex(0.00,0.00,5.00));
         camera.setView_up(new Vertex(0.00,-1.00,0.00));
         
+        
         scene = new SuperPolygon( polyLista );
         pTopL = new MyJPanel(scene.getSuperPolygon());
-        pTopL.map.setNiceParametros(pTopL.polygon);
         pTopL.setBackground(Color.GRAY);
         pTopL.tipoProjecao = ProjecaoEnum.FRONTAL;
         
@@ -128,8 +124,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pMMBottomR.setLayout(null);
         pMMBottomR.add(pBottomR);
         pBottomR.setSize(pMMBottomR.getSize());
-        
-        
         
         planoPanel = new PlanoPanel();
         
@@ -193,11 +187,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         {
             painelSelecionado.setBackground(Color.RED);
         }
-        
-        pTopR.polygon = scene.getSuperPolygon();
-        pTopL.polygon = scene.getSuperPolygon();
-        pBottomR.polygon = scene.getSuperPolygon();
-        pBottomL.polygon = scene.getSuperPolygon();
+        Polygon superPolygono = scene.getSuperPolygon();
+        pTopR.polygon = superPolygono;
+        pTopL.polygon = superPolygono;
+        pBottomR.polygon = superPolygono;
+        pBottomL.polygon = superPolygono;
         
         lbBottomL.setText(pBottomL.tipoProjecao.toString());
         lbBottomR.setText(pBottomR.tipoProjecao.toString());
@@ -260,17 +254,17 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         Vertex p = camera.getP();
         Vertex viewUp = camera.getView_up();
         
-        tfVRPX.setText(String.format(Locale.US, "%.2f", vrp.getPos_x()));
-        tfVRPY.setText(String.format(Locale.US, "%.2f", vrp.getPos_z()));
-        tfVRPZ.setText(String.format(Locale.US, "%.2f", vrp.getPos_y()));
+        tfVRPX.setText(String.format(Locale.US, "%.2f", vrp.getPosXDummy()));
+        tfVRPY.setText(String.format(Locale.US, "%.2f", vrp.getPosZDummy()));
+        tfVRPZ.setText(String.format(Locale.US, "%.2f", vrp.getPosYDummy()));
         
-        tfPX.setText(String.format(Locale.US, "%.2f", p.getPos_x()));
-        tfPY.setText(String.format(Locale.US, "%.2f", p.getPos_y()));
-        tfPZ.setText(String.format(Locale.US, "%.2f", p.getPos_z()));
+        tfPX.setText(String.format(Locale.US, "%.2f", p.getPosXDummy()));
+        tfPY.setText(String.format(Locale.US, "%.2f", p.getPosYDummy()));
+        tfPZ.setText(String.format(Locale.US, "%.2f", p.getPosZDummy()));
         
-        tfViewUX.setText(String.format(Locale.US, "%.2f", viewUp.getPos_x()));
-        tfViewUY.setText(String.format(Locale.US, "%.2f", viewUp.getPos_y()));
-        tfViewUZ.setText(String.format(Locale.US, "%.2f", viewUp.getPos_z()));
+        tfViewUX.setText(String.format(Locale.US, "%.2f", viewUp.getPosXDummy()));
+        tfViewUY.setText(String.format(Locale.US, "%.2f", viewUp.getPosYDummy()));
+        tfViewUZ.setText(String.format(Locale.US, "%.2f", viewUp.getPosZDummy()));
     }
 
     /**
@@ -282,6 +276,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bgTipoDeBase = new javax.swing.ButtonGroup();
         pViews = new javax.swing.JPanel();
         pMTopL = new javax.swing.JPanel();
         lbTopL = new javax.swing.JLabel();
@@ -325,10 +320,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        rbBaseQuadrada = new javax.swing.JRadioButton();
-        rbBaseQuadrada1 = new javax.swing.JRadioButton();
-        tfTamanhoBase = new javax.swing.JTextField();
+        rbBaseTriangular = new javax.swing.JRadioButton();
+        rbBaseIcosagonal = new javax.swing.JRadioButton();
+        tfNumeroLados = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
+        jRadioButton1 = new javax.swing.JRadioButton();
         jPanel9 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
@@ -746,14 +742,39 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5), "TipoDeBase"));
 
-        rbBaseQuadrada.setText("Base Triangular");
+        bgTipoDeBase.add(rbBaseTriangular);
+        rbBaseTriangular.setText("Base Triangular");
+        rbBaseTriangular.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbBaseTriangularActionPerformed(evt);
+            }
+        });
 
-        rbBaseQuadrada1.setText("Base Icosagonal");
+        bgTipoDeBase.add(rbBaseIcosagonal);
+        rbBaseIcosagonal.setText("Base Icosagonal");
+        rbBaseIcosagonal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbBaseIcosagonalActionPerformed(evt);
+            }
+        });
 
-        tfTamanhoBase.setText("jTextField1");
+        tfNumeroLados.setText("jTextField1");
+        tfNumeroLados.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfNumeroLadosActionPerformed(evt);
+            }
+        });
 
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel19.setText("Base tamanho n");
+
+        bgTipoDeBase.add(jRadioButton1);
+        jRadioButton1.setText("Personalizado");
+        jRadioButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -762,12 +783,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rbBaseQuadrada)
-                    .addComponent(rbBaseQuadrada1))
-                .addGap(23, 23, 23)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
-                    .addComponent(tfTamanhoBase))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(rbBaseTriangular)
+                            .addComponent(rbBaseIcosagonal))
+                        .addGap(23, 23, 23)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
+                            .addComponent(tfNumeroLados)))
+                    .addComponent(jRadioButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -775,13 +799,15 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(rbBaseQuadrada)
+                    .addComponent(rbBaseTriangular)
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rbBaseQuadrada1)
-                    .addComponent(tfTamanhoBase, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(35, Short.MAX_VALUE))
+                    .addComponent(rbBaseIcosagonal)
+                    .addComponent(tfNumeroLados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButton1)
+                .addContainerGap(9, Short.MAX_VALUE))
         );
 
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5), "PropriedadesBase"));
@@ -861,6 +887,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
 
         jLabel9.setText("Distancia da Base : ");
 
+        tfDistanciaX.setEditable(false);
         tfDistanciaX.setText("jTextField1");
 
         jLabel15.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -874,6 +901,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jLabel17.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel17.setText("Z");
 
+        tfDistanciaZ.setEditable(false);
         tfDistanciaZ.setText("jTextField1");
 
         tfNumeroSegmentos.setText("jTextField1");
@@ -978,7 +1006,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btCriar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1074,6 +1102,37 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         resetPanelSelecionado();
     }//GEN-LAST:event_jPanel2AncestorRemoved
 
+    private void rbBaseTriangularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbBaseTriangularActionPerformed
+        // TODO add your handling code here:
+        revalidarJanelaAdicionarObjeto();
+    }//GEN-LAST:event_rbBaseTriangularActionPerformed
+
+    private void rbBaseIcosagonalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbBaseIcosagonalActionPerformed
+        // TODO add your handling code here:
+        revalidarJanelaAdicionarObjeto();
+    }//GEN-LAST:event_rbBaseIcosagonalActionPerformed
+
+    private void tfNumeroLadosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfNumeroLadosActionPerformed
+        // TODO add your handling code here:
+        try{
+            int numeroLados = Integer.parseInt( tfNumeroLados.getText() );
+            if (numeroLados < 3)
+            {
+                throw new IllegalArgumentException();
+            }
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            tfAvisosCriarObjeto.setText("Numero de lados invalido!Erro!");
+            resetarJanelaAdicionarObjetoTF();
+        }
+    }//GEN-LAST:event_tfNumeroLadosActionPerformed
+
+    private void jRadioButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton1ActionPerformed
+        // TODO add your handling code here:
+        revalidarJanelaAdicionarObjeto();
+    }//GEN-LAST:event_jRadioButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1147,14 +1206,34 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         tfOrigemX.setText("");
         tfOrigemY.setText("");
         tfOrigemZ.setText("");
-        
-        tfDistanciaX.setText("");
+        rbBaseTriangular.setSelected(true);
+        tfDistanciaX.setText("0.00");
+        tfDistanciaX.setEnabled(false);
         tfDistanciaY.setText("");
-        tfDistanciaZ.setText("");
+        tfDistanciaZ.setText("0.00");
+        tfDistanciaZ.setEnabled(false);
         
         tfNumeroSegmentos.setText("");
         
         tfTamanhoLado.setText("1.00");
+        revalidarJanelaAdicionarObjeto();
+    }
+    
+    private void revalidarJanelaAdicionarObjeto()
+    {
+        tfNumeroLados.setEnabled(false);
+        if (rbBaseTriangular.isSelected())
+        {
+            tfNumeroLados.setText("3");
+        }
+        else if (rbBaseIcosagonal.isSelected())
+        {
+            tfNumeroLados.setText("20");
+        }
+        else
+        {
+            tfNumeroLados.setEnabled(true);
+        }
     }
     
     private void tentarAdicionarPoligono()
@@ -1170,20 +1249,26 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             double translacaoZ = Double.parseDouble( tfDistanciaZ.getText() );
             
             double tamanhoLado = Double.parseDouble( tfTamanhoLado.getText() );
+            int numeroLados = Integer.parseInt( tfNumeroLados.getText() );
             int numeroSegmentos = Integer.parseInt( tfNumeroSegmentos.getText() );
             if (numeroSegmentos < 0 || tamanhoLado <= 0.00)
             {
                 throw new IllegalArgumentException();
             }
-            if (Math.abs( translacaoY ) <= 0.00001)
+            if (Constantes.aproximador(translacaoY) == 0.00)
             {
                 tfAvisosCriarObjeto.setText("Y não pode ser 0!");
+                throw new IllegalArgumentException();
+            }
+            if (numeroLados <= 2)
+            {
+                tfAvisosCriarObjeto.setText("Numero de lados invalido!");
                 throw new IllegalArgumentException();
             }
             Vertex centroDaBase = new Vertex(origemX,origemY,origemZ);
             
             //Polygon base = PolygonGenerator.generateBaseQuadrada(tamanhoLado, centroDaBase);
-            Polygon base = PolygonGenerator.generateGenericPolygon(tamanhoLado, centroDaBase, 3);
+            Polygon base = PolygonGenerator.generateGenericPolygon(tamanhoLado, centroDaBase, numeroLados);
             
             Polygon real = Extrusao.gerarPolygonoExtrudido(base, numeroSegmentos ,centroDaBase, translacaoX, translacaoY, translacaoZ);
             
@@ -1205,6 +1290,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     //</editor-fold>
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bgTipoDeBase;
     private javax.swing.JButton btCriar;
     private javax.swing.JButton btDireitaPlano;
     private javax.swing.JButton btEsquerdaPlano;
@@ -1236,6 +1322,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel9;
+    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane3;
@@ -1254,13 +1341,14 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel pMTopR;
     private javax.swing.JPanel pParaPlanos;
     private javax.swing.JPanel pViews;
-    private javax.swing.JRadioButton rbBaseQuadrada;
-    private javax.swing.JRadioButton rbBaseQuadrada1;
+    private javax.swing.JRadioButton rbBaseIcosagonal;
+    private javax.swing.JRadioButton rbBaseTriangular;
     private View.SeletorObjetos seletorObjetos;
     private javax.swing.JTextArea tfAvisosCriarObjeto;
     private javax.swing.JTextField tfDistanciaX;
     private javax.swing.JTextField tfDistanciaY;
     private javax.swing.JTextField tfDistanciaZ;
+    private javax.swing.JTextField tfNumeroLados;
     private javax.swing.JTextField tfNumeroSegmentos;
     private javax.swing.JTextField tfOrigemX;
     private javax.swing.JTextField tfOrigemY;
@@ -1268,7 +1356,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField tfPX;
     private javax.swing.JTextField tfPY;
     private javax.swing.JTextField tfPZ;
-    private javax.swing.JTextField tfTamanhoBase;
     private javax.swing.JTextField tfTamanhoLado;
     private javax.swing.JTextField tfVRPX;
     private javax.swing.JTextField tfVRPY;
