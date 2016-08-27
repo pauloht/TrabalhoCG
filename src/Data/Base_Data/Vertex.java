@@ -178,7 +178,7 @@ public class Vertex {
 
     @Override
     public String toString() {
-        return "VertexRoot{" + "pos_x=" + pos_x + ", pos_y=" + pos_y + ", pos_z=" + pos_z + '}';
+        return '(' + Double.toString(pos_x) + ',' + Double.toString(pos_y) + ',' + Double.toString(pos_z) + ')';
     }
     
     

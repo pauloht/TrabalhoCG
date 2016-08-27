@@ -31,7 +31,7 @@ public class Polygon {
     public double fatorBevel = 1.00;
     public double fatorBend = 0.00;
     public double fatorTwist = 0.00;
-    public BendConstraints constante = BendConstraints.XPlus;
+    public BendConstraints constanteBend = BendConstraints.XPlus;
     
     public CGEnum calculoDaCG = CGEnum.MEDIASDOSPONTOS;
     
@@ -224,7 +224,7 @@ public class Polygon {
         //System.out.println("antes de aplicar modificadores = " + this.get3DVertexMatrixDummy());
         Polygon poligonoResegmentado = Extrusao.reSegmentar(this, this.segmentos.size()-1);
         this.refresh(poligonoResegmentado);
-        Blend.blendPolygon(this, this.fatorBevel, this.fatorTwist, this.fatorBend, this.constante);
+        Blend.blendPolygon(this, this.fatorBevel, this.fatorTwist, this.fatorBend, this.constanteBend);
         //System.out.println("depois de aplicar modificadores " + this.get3DVertexMatrixDummy());
         //System.out.println("Base depois : " + this.base.get3DVertexMatrixRoot());
         //System.out.println("Base depois Dummy : " + this.base.get3DVertexMatrixDummy());
@@ -330,11 +330,16 @@ public class Polygon {
         }
     }
     
+    
     //<editor-fold defaultstate="collapsed" desc="setter and getters">
     
         
-    public void setBase(Polygon poly)
+    public void setOperacoes(Matrix operacoes)
     {
+        this.operacoes = operacoes;
+    }
+
+    public void setBase(Polygon poly) {
         base = poly;
     }
 

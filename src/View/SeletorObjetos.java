@@ -976,7 +976,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
             {
                 throw new IllegalArgumentException();
             }
-            poligonoSelecionado.constante = constante;
+            poligonoSelecionado.constanteBend = constante;
             poligonoSelecionado.fatorBend = fatorBend;
             aplicarOperacoesModificadoresGenerica();
             //Polygon poligonoResegmentado = Extrusao.reSegmentar(poligonoSelecionado, poligonoSelecionado.segmentos.size()-1);

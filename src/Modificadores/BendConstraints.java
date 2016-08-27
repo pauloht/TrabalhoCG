@@ -10,8 +10,32 @@ package Modificadores;
  * @author FREE
  */
 public enum BendConstraints {
-    XPlus,
-    XMinus,
-    ZPlus,
-    ZMinus;
+    XPlus(0),
+    XMinus(1),
+    ZPlus(2),
+    ZMinus(3);
+    
+    private int valor;
+    
+    BendConstraints(int valor)
+    {
+        this.valor = valor;
+    }
+    
+    public int getValor()
+    {
+        return(valor);
+    }
+    
+    public static BendConstraints getInstanciaPorValor(int valor)
+    {
+        switch(valor)
+        {
+            case 0 : return BendConstraints.XPlus;
+            case 1 : return BendConstraints.XMinus;
+            case 2 : return BendConstraints.ZPlus;
+            case 3 : return BendConstraints.ZMinus;
+            default : throw new IllegalArgumentException();
+        }
+    }
 }

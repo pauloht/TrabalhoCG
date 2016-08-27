@@ -86,6 +86,15 @@ public class Extrusao {
         return(retorno);
     }
     
+    public static Polygon gerarPolygonoExtrudido(Polygon base,int numeroSegmentos,Vertex alvo)
+    {
+        //System.out.println("----FAZENDO EXTRUSAO EM " + numeroSegmentos + " NIVEIS!!!!--------");
+        double distanciaX = alvo.getPosXRoot();
+        double distanciaY = alvo.getPosYRoot();
+        double distanciaZ = alvo.getPosZRoot();
+        return(gerarPolygonoExtrudido(base,numeroSegmentos,base.calculateCG(),distanciaX,distanciaY,distanciaZ));
+    }
+    
     public static Polygon reSegmentar(Polygon poligono,int numeroSegmentos)
     {
         //System.out.println("--------FAZENDO RESEGMENTACAO--------------");
