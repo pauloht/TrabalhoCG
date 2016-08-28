@@ -6,6 +6,12 @@
 package Pipeline.Projecao;
 
 import Data.Base_Data.Matrix;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -54,6 +60,36 @@ public enum ProjecaoEnum {
                 return("Top");
             default :
                 throw new UnsupportedOperationException();
+        }
+    }
+    
+    public Icon getIcon()
+    {
+        Icon retorno = null;
+        try{
+        switch (this)
+        {
+            case FRONTAL :
+                retorno = new ImageIcon( ImageIO.read(new File(getClass().getResource("/Imgs/Frontal.gif").getFile() ) ) );
+                break;
+            case TOP :
+                retorno = new ImageIcon( ImageIO.read(new File(getClass().getResource("/Imgs/Topo.gif").getFile() ) ) );
+                break;
+            case SIDE :
+                retorno = new ImageIcon( ImageIO.read(new File(getClass().getResource("/Imgs/Lateral.gif").getFile() ) ) );
+                break;
+            case PERSPERCTIVE : 
+                return(null);
+            default :
+                throw new IllegalArgumentException();
+        }
+        return(retorno);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            System.out.println("ERRO AO CARREGAR IMAGEM...RETORNANDO NUlo");
+            return(null);
         }
     }
     

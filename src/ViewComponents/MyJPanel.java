@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class MyJPanel extends JPanel{
     //private final List<Polygon>poly = new ArrayList<>();
-    public Polygon polygon;
+    public Polygon cena;
     public String nome = "NomeDefault";
     public Map map = new Map();
     
@@ -40,25 +40,21 @@ public class MyJPanel extends JPanel{
     public MyJPanel(Polygon algumPolygono)
     {
         super();
-        polygon = algumPolygono;
+        cena = algumPolygono;
     }
     
     @Override
     synchronized public void paint(Graphics g)
     {
         super.paint(g);
-        if (polygon != null)
+        if (cena != null)
         {
+            Polygon copia = new Polygon(cena);
             //System.out.println("REPAINT");
             //System.out.println("REDESENHANDO");
             //System.out.println("Dimension = " + this.getSize());
             //System.out.println("super chamado!");
-            Polygon copia = new Polygon(polygon);
-            
-            if (this.tipoProjecao == ProjecaoEnum.FRONTAL)
-            {
-                System.out.println("Frontal antes de camera/proj/map, poly dummy = " + copia.get3DVertexMatrixDummy());
-            }
+            //Polygon copia = new Polygon(polygon);
             
             //System.out.println("Polygon = " + polygon.get3DVertexMatrix());
             List< Matrix > operacoesMatriciais = new ArrayList<>();
@@ -160,8 +156,6 @@ public class MyJPanel extends JPanel{
             //copia.set3DVertexMatrix(concatenada);
             
             //System.out.println("Copia = " + copia.get3DVertexMatrix());
-
-
             int x1,y1,x2,y2;
             if (copia.edge_list != null)
             {

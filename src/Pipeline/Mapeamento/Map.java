@@ -49,7 +49,7 @@ public class Map {
         
         if (Math.abs(YMax - YMin) > Constantes.PRESCISSAO)
         {
-            razao_alturas = (VMax - VMin)/(YMax - YMin);
+            razao_alturas = (VMin - VMax)/(YMax - YMin);
         }
         else
         {
@@ -58,7 +58,7 @@ public class Map {
         
         Double movimento_em_x = (-XMin*(razao_larguras)) + UMin;
         
-        Double movimento_em_y = (-YMin*(razao_alturas)) + VMin;
+        Double movimento_em_y = (YMin*(-razao_alturas)) + VMax;
         
         //System.err.print("XMin = " + XMin + "\nYMin = " + YMin + "UMin = " + UMin + "\nVMin= " + VMin + "\nRazao larguras = " + razao_larguras + "\nRazao alturas =  " + razao_alturas + "\nmovimentoX = " + movimento_em_x + "\nMovimentoY = " + movimento_em_y);
         

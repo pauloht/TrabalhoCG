@@ -89,11 +89,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         camera = CameraClass.getInstance();
         camera.setP(new Vertex(0.00,0.00,0.00));
         camera.setVrp(new Vertex(0.00,0.00,5.00));
-        camera.setView_up(new Vertex(0.00,-1.00,0.00));
+        camera.setView_up(new Vertex(0.00,1.00,0.00));
         
         
         scene = new SuperPolygon( polyLista );
-        pTopL = new MyJPanel(scene.getSuperPolygon());
+        Polygon cena = scene.getSuperPolygon();
+        
+        pTopL = new MyJPanel(cena);
         pTopL.setBackground(Color.GRAY);
         pTopL.tipoProjecao = ProjecaoEnum.FRONTAL;
         
@@ -101,7 +103,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pMMTopL.add(pTopL);
         pTopL.setSize(pMMTopL.getSize());
         
-        pBottomL = new MyJPanel(scene.getSuperPolygon());
+        pBottomL = new MyJPanel(cena);
         pBottomL.setBackground(Color.GRAY);
         pBottomL.tipoProjecao = ProjecaoEnum.TOP;
         
@@ -109,7 +111,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pMMBottomL.add(pBottomL);
         pBottomL.setSize(pMMBottomL.getSize());
         
-        pTopR = new MyJPanel(scene.getSuperPolygon());
+        pTopR = new MyJPanel(cena);
         pTopR.setBackground(Color.GRAY);
         pTopR.tipoProjecao = ProjecaoEnum.SIDE;
         
@@ -117,7 +119,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pMMTopR.add(pTopR);
         pTopR.setSize(pMMTopR.getSize());
         
-        pBottomR = new MyJPanel(scene.getSuperPolygon());
+        pBottomR = new MyJPanel(cena);
         pBottomR.setBackground(Color.GRAY);
         pBottomR.tipoProjecao = ProjecaoEnum.PERSPERCTIVE;
         
@@ -136,7 +138,6 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         mypainelSelecionado = pTopL;
         
         
-        pack();
         ViewGlobal.centralizarJanela(this);
         
         planoPanel.setSize(pParaPlanos.getSize());
@@ -187,17 +188,23 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         {
             painelSelecionado.setBackground(Color.RED);
         }
-        Polygon superPolygono = scene.getSuperPolygon();
-        pTopR.polygon = superPolygono;
-        pTopL.polygon = superPolygono;
-        pBottomR.polygon = superPolygono;
-        pBottomL.polygon = superPolygono;
+        Polygon cena = scene.getSuperPolygon();
+        pTopR.cena = cena;
+        pTopL.cena = cena;
+        pBottomR.cena = cena;
+        pBottomL.cena = cena;
         
         lbBottomL.setText(pBottomL.tipoProjecao.toString());
         lbBottomR.setText(pBottomR.tipoProjecao.toString());
         lbTopL.setText(pTopL.tipoProjecao.toString());
         lbTopR.setText(pTopR.tipoProjecao.toString());
         
+        iconBottomLeft.setIcon(pBottomL.tipoProjecao.getIcon());
+        iconBottomRight.setIcon(pBottomR.tipoProjecao.getIcon());
+        iconTopLeft.setIcon(pTopL.tipoProjecao.getIcon());
+        iconTopRight.setIcon(pTopR.tipoProjecao.getIcon());
+        
+        //(new File(getClass().getResource("/View/Imagens/Herois/elesis.jpg").getFile()));
         switch (contadorPainelSelecionado)
         {
             case 0 :
@@ -287,15 +294,19 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pMTopL = new javax.swing.JPanel();
         lbTopL = new javax.swing.JLabel();
         pMMTopL = new javax.swing.JPanel();
+        iconTopLeft = new javax.swing.JLabel();
         pMTopR = new javax.swing.JPanel();
         lbTopR = new javax.swing.JLabel();
         pMMTopR = new javax.swing.JPanel();
+        iconTopRight = new javax.swing.JLabel();
         pMBottomL = new javax.swing.JPanel();
         lbBottomL = new javax.swing.JLabel();
         pMMBottomL = new javax.swing.JPanel();
+        iconBottomLeft = new javax.swing.JLabel();
         pMBottomR = new javax.swing.JPanel();
         lbBottomR = new javax.swing.JLabel();
         pMMBottomR = new javax.swing.JPanel();
+        iconBottomRight = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel6 = new javax.swing.JPanel();
         jTabbedPane3 = new javax.swing.JTabbedPane();
@@ -321,6 +332,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         tfViewUX = new javax.swing.JTextField();
         tfPY = new javax.swing.JTextField();
         tfViewUZ = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         seletorObjetos = new View.SeletorObjetos();
         jPanel3 = new javax.swing.JPanel();
@@ -366,45 +380,52 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pViews.setBackground(new java.awt.Color(0, 0, 0));
         pViews.setPreferredSize(new java.awt.Dimension(600, 600));
 
-        pMTopL.setBackground(new java.awt.Color(255, 0, 51));
+        pMTopL.setBackground(new java.awt.Color(204, 51, 0));
 
         lbTopL.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbTopL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTopL.setText("TopLeftText");
 
-        pMMTopL.setPreferredSize(new java.awt.Dimension(250, 250));
+        pMMTopL.setPreferredSize(new java.awt.Dimension(289, 298));
 
         javax.swing.GroupLayout pMMTopLLayout = new javax.swing.GroupLayout(pMMTopL);
         pMMTopL.setLayout(pMMTopLLayout);
         pMMTopLLayout.setHorizontalGroup(
             pMMTopLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 333, Short.MAX_VALUE)
         );
         pMMTopLLayout.setVerticalGroup(
             pMMTopLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 270, Short.MAX_VALUE)
+            .addGap(0, 297, Short.MAX_VALUE)
         );
+
+        iconTopLeft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imgs/Frontal.gif"))); // NOI18N
 
         javax.swing.GroupLayout pMTopLLayout = new javax.swing.GroupLayout(pMTopL);
         pMTopL.setLayout(pMTopLLayout);
         pMTopLLayout.setHorizontalGroup(
             pMTopLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMTopLLayout.createSequentialGroup()
-                .addGap(56, 56, 56)
-                .addComponent(lbTopL, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pMTopLLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pMMTopL, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addGroup(pMTopLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pMTopLLayout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(lbTopL, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(iconTopLeft))
+                    .addGroup(pMTopLLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pMMTopL, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pMTopLLayout.setVerticalGroup(
             pMTopLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMTopLLayout.createSequentialGroup()
-                .addComponent(lbTopL)
+                .addGroup(pMTopLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbTopL)
+                    .addComponent(iconTopLeft))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pMMTopL, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pMMTopL, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pMTopR.setBackground(new java.awt.Color(255, 0, 0));
@@ -413,7 +434,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         lbTopR.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbTopR.setText("TopRightText");
 
-        pMMTopR.setPreferredSize(new java.awt.Dimension(250, 250));
+        pMMTopR.setPreferredSize(new java.awt.Dimension(323, 298));
 
         javax.swing.GroupLayout pMMTopRLayout = new javax.swing.GroupLayout(pMMTopR);
         pMMTopR.setLayout(pMMTopRLayout);
@@ -423,70 +444,86 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         );
         pMMTopRLayout.setVerticalGroup(
             pMMTopRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 272, Short.MAX_VALUE)
+            .addGap(0, 335, Short.MAX_VALUE)
         );
+
+        iconTopRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imgs/Topo.gif"))); // NOI18N
 
         javax.swing.GroupLayout pMTopRLayout = new javax.swing.GroupLayout(pMTopR);
         pMTopR.setLayout(pMTopRLayout);
         pMTopRLayout.setHorizontalGroup(
             pMTopRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMTopRLayout.createSequentialGroup()
-                .addContainerGap(76, Short.MAX_VALUE)
-                .addComponent(lbTopR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68))
             .addGroup(pMTopRLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pMMTopR, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addGroup(pMTopRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pMTopRLayout.createSequentialGroup()
+                        .addGap(105, 105, 105)
+                        .addComponent(lbTopR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addComponent(iconTopRight))
+                    .addGroup(pMTopRLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pMMTopR, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pMTopRLayout.setVerticalGroup(
             pMTopRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMTopRLayout.createSequentialGroup()
-                .addComponent(lbTopR)
+                .addGroup(pMTopRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbTopR)
+                    .addComponent(iconTopRight))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pMMTopR, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addComponent(pMMTopR, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pMBottomL.setBackground(new java.awt.Color(255, 0, 0));
+        pMBottomL.setRequestFocusEnabled(false);
+        pMBottomL.setVerifyInputWhenFocusTarget(false);
 
         lbBottomL.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         lbBottomL.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbBottomL.setText("BottomLeftText");
 
-        pMMBottomL.setPreferredSize(new java.awt.Dimension(250, 250));
+        pMMBottomL.setPreferredSize(new java.awt.Dimension(289, 287));
 
         javax.swing.GroupLayout pMMBottomLLayout = new javax.swing.GroupLayout(pMMBottomL);
         pMMBottomL.setLayout(pMMBottomLLayout);
         pMMBottomLLayout.setHorizontalGroup(
             pMMBottomLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 333, Short.MAX_VALUE)
         );
         pMMBottomLLayout.setVerticalGroup(
             pMMBottomLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
+            .addGap(0, 336, Short.MAX_VALUE)
         );
+
+        iconBottomLeft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imgs/Topo.gif"))); // NOI18N
 
         javax.swing.GroupLayout pMBottomLLayout = new javax.swing.GroupLayout(pMBottomL);
         pMBottomL.setLayout(pMBottomLLayout);
         pMBottomLLayout.setHorizontalGroup(
             pMBottomLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMBottomLLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pMMBottomL, javax.swing.GroupLayout.DEFAULT_SIZE, 285, Short.MAX_VALUE)
+                .addGroup(pMBottomLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pMBottomLLayout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(lbBottomL, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(iconBottomLeft))
+                    .addGroup(pMBottomLLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pMMBottomL, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
-            .addGroup(pMBottomLLayout.createSequentialGroup()
-                .addGap(65, 65, 65)
-                .addComponent(lbBottomL, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(80, Short.MAX_VALUE))
         );
         pMBottomLLayout.setVerticalGroup(
             pMBottomLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMBottomLLayout.createSequentialGroup()
-                .addComponent(lbBottomL)
-                .addGap(18, 18, 18)
-                .addComponent(pMMBottomL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGroup(pMBottomLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbBottomL)
+                    .addComponent(iconBottomLeft))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pMMBottomL, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pMBottomR.setBackground(new java.awt.Color(255, 0, 0));
@@ -505,28 +542,35 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         );
         pMMBottomRLayout.setVerticalGroup(
             pMMBottomRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 250, Short.MAX_VALUE)
+            .addGap(0, 335, Short.MAX_VALUE)
         );
+
+        iconBottomRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imgs/Topo.gif"))); // NOI18N
 
         javax.swing.GroupLayout pMBottomRLayout = new javax.swing.GroupLayout(pMBottomR);
         pMBottomR.setLayout(pMBottomRLayout);
         pMBottomRLayout.setHorizontalGroup(
             pMBottomRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMBottomRLayout.createSequentialGroup()
-                .addGap(67, 67, 67)
-                .addComponent(lbBottomR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(pMBottomRLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pMMBottomR, javax.swing.GroupLayout.DEFAULT_SIZE, 284, Short.MAX_VALUE)
+                .addGroup(pMBottomRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pMBottomRLayout.createSequentialGroup()
+                        .addGap(67, 67, 67)
+                        .addComponent(lbBottomR, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(iconBottomRight))
+                    .addGroup(pMBottomRLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(pMMBottomR, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         pMBottomRLayout.setVerticalGroup(
             pMBottomRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pMBottomRLayout.createSequentialGroup()
-                .addComponent(lbBottomR)
-                .addGap(18, 18, 18)
-                .addComponent(pMMBottomR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pMBottomRLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbBottomR)
+                    .addComponent(iconBottomRight))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pMMBottomR, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -549,7 +593,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pParaPlanos.setLayout(pParaPlanosLayout);
         pParaPlanosLayout.setHorizontalGroup(
             pParaPlanosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 376, Short.MAX_VALUE)
         );
         pParaPlanosLayout.setVerticalGroup(
             pParaPlanosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -578,12 +622,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pParaPlanos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(pParaPlanos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(btEsquerdaPlano, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                .addComponent(btEsquerdaPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btDireitaPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(lbNomeDoPlano, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(lbNomeDoPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -593,7 +637,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btDireitaPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btEsquerdaPlano, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(pParaPlanos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48))
         );
@@ -617,19 +661,25 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Z");
 
+        tfVRPY.setEditable(false);
         tfVRPY.setText("jTextField1");
 
+        tfVRPX.setEditable(false);
         tfVRPX.setText("jTextField1");
 
+        tfVRPZ.setEditable(false);
         tfVRPZ.setText("jTextField1");
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jLabel5.setText("P");
 
+        tfPX.setEditable(false);
         tfPX.setText("jTextField1");
 
+        tfViewUY.setEditable(false);
         tfViewUY.setText("jTextField1");
 
+        tfPZ.setEditable(false);
         tfPZ.setText("jTextField1");
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -640,48 +690,67 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jLabel7.setText("View");
         jLabel7.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        tfViewUX.setEditable(false);
         tfViewUX.setText("jTextField1");
 
+        tfPY.setEditable(false);
         tfPY.setText("jTextField1");
 
+        tfViewUZ.setEditable(false);
         tfViewUZ.setText("jTextField1");
+
+        jLabel20.setText("OBS : NO MOMENTO A CAMERA É FIXA.");
+
+        jLabel21.setText("Se quiser mudar valores inicias tera que mudar no construtor da classe");
+
+        jLabel22.setText("Janela principal");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
-                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(6, 6, 6)
-                .addComponent(tfVRPX, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(tfVRPY, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(14, 14, 14)
-                .addComponent(tfVRPZ, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel5)
-                .addGap(31, 31, 31)
-                .addComponent(tfPX, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(tfPY, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(tfPZ, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jLabel7)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(4, 4, 4)
-                .addComponent(tfViewUX, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(6, 6, 6)
-                .addComponent(tfViewUY, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
-                .addComponent(tfViewUZ, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(6, 6, 6)
+                        .addComponent(tfVRPX, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(tfVRPY, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(14, 14, 14)
+                        .addComponent(tfVRPZ, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(31, 31, 31)
+                        .addComponent(tfPX, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(tfPY, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(tfPZ, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel7)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addComponent(tfViewUX, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(tfViewUY, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(tfViewUZ, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel21))
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel22))
+                    .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -711,7 +780,14 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabel6)
                     .addComponent(tfViewUX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tfViewUY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfViewUZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tfViewUZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel22)
+                .addContainerGap())
         );
 
         jTabbedPane3.addTab("Camera", jPanel7);
@@ -720,14 +796,14 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane3)
+            .addComponent(jTabbedPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addGap(20, 20, 20)
                 .addComponent(jTabbedPane3)
-                .addContainerGap())
+                .addGap(158, 158, 158))
         );
 
         jTabbedPane1.addTab("Config", jPanel6);
@@ -744,7 +820,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(seletorObjetos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 180, Short.MAX_VALUE))
+                .addGap(0, 172, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Objetos", jPanel1);
@@ -834,10 +910,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel14.setText("Z");
 
+        tfOrigemY.setEditable(false);
         tfOrigemY.setText("jTextField1");
 
+        tfOrigemZ.setEditable(false);
         tfOrigemZ.setText("jTextField1");
 
+        tfOrigemX.setEditable(false);
         tfOrigemX.setText("jTextField1");
 
         jLabel11.setText("Tamanho Lado :");
@@ -1004,7 +1083,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btCriar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1017,9 +1096,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                 .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btCriar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(88, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -1098,7 +1177,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 407, Short.MAX_VALUE))
+                .addGap(0, 491, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Salvar/Carregar", jPanel8);
@@ -1108,14 +1187,14 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         pViewsLayout.setHorizontalGroup(
             pViewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pViewsLayout.createSequentialGroup()
-                .addGroup(pViewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(pMTopL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pMBottomL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pViewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pMBottomL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pMTopL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
-                .addGroup(pViewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pViewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pMTopR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pMBottomR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 386, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1127,20 +1206,22 @@ public class JanelaPrincipal extends javax.swing.JFrame {
                     .addComponent(pMTopR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(0, 0, 0)
                 .addGroup(pViewsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pMBottomL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pMBottomR, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-            .addComponent(jTabbedPane1)
+                    .addComponent(pMBottomL, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pMBottomR, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pViews, javax.swing.GroupLayout.PREFERRED_SIZE, 1003, Short.MAX_VALUE)
+            .addComponent(pViews, javax.swing.GroupLayout.PREFERRED_SIZE, 1118, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pViews, javax.swing.GroupLayout.DEFAULT_SIZE, 667, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pViews, javax.swing.GroupLayout.PREFERRED_SIZE, 742, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -1298,9 +1379,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     
     private void resetarJanelaAdicionarObjetoTF()
     {
-        tfOrigemX.setText("");
-        tfOrigemY.setText("");
-        tfOrigemZ.setText("");
+        tfOrigemX.setText("0.00");
+        tfOrigemY.setText("0.00");
+        tfOrigemZ.setText("0.00");
         rbBaseTriangular.setSelected(true);
         tfDistanciaX.setText("0.00");
         tfDistanciaX.setEnabled(false);
@@ -1390,6 +1471,10 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btDireitaPlano;
     private javax.swing.JButton btEsquerdaPlano;
     private javax.swing.JButton btSalvar;
+    private javax.swing.JLabel iconBottomLeft;
+    private javax.swing.JLabel iconBottomRight;
+    private javax.swing.JLabel iconTopLeft;
+    private javax.swing.JLabel iconTopRight;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1403,6 +1488,9 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

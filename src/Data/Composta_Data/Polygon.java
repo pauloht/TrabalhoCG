@@ -53,13 +53,9 @@ public class Polygon {
         this.face_list = face_list;
     }
     
-    /**
-     * Construtor de copia, por enquanto nao copia FACES deixa fazio lista de faces
-     * nao faz ligacao vertex.edge apenas edge.vertexinicio e edge.vertexfim
-     * ACONTECE PROBLEMAS SE EXISTIR DOIS VERTEX EM MESMAS COORDENADAS!(lembrar de manter original)
-     * @param outro 
-     * @return Polygono copia
-     */
+    
+    //copia usada anterior
+    /*
     public Polygon( Polygon outro )
     {
         if (outro.operacoes != null)
@@ -133,6 +129,86 @@ public class Polygon {
         this.edge_list = novasEdges;
         this.face_list = novasFaces;
     }
+    */
+    
+    //versao copia teste, supostastamente é melhor que outra pois nao tem problemas com vertex identicos
+    public Polygon( Polygon outro)
+    {
+        if (outro.operacoes != null)
+        {
+            operacoes = new Matrix(outro.operacoes);
+        }
+        else
+        {
+            operacoes = new Matrix(Matrix.MATRIXBASICA);
+        }
+        
+        if (outro.base != null)
+        {
+            this.base = new Polygon( outro.base );
+        }
+        else
+        {
+            this.base = null;
+        }
+        
+        if (outro.alvo != null)
+        {
+            this.alvo = new Vertex(outro.alvo);
+        }
+        else
+        {
+            this.alvo = null;
+        }
+        
+        List< Vertex > listaDeVertexCopiados = new ArrayList<>();
+        List< Vertex > listaDeVertex = new ArrayList<>();
+        List< Edge > listaDeEdgesCopiadas = new ArrayList<>();
+        
+        for (Vertex vertex : outro.vertex_list)
+        {
+            listaDeVertex.add(vertex);
+            Vertex copiaVertex = new Vertex(vertex);
+            listaDeVertexCopiados.add(copiaVertex);
+        }
+        
+        for (Edge edge : outro.edge_list)
+        {
+            Vertex inicio = null;
+            Vertex fim = null;
+            
+            boolean achouInicio = false;
+            boolean achouFim = false;
+            for (int i=0;i<listaDeVertex.size();i++)
+            {
+                Vertex vertex = listaDeVertex.get(i);
+                if (achouInicio&&achouFim)
+                {
+                    break;
+                }
+                if (edge.getEnd_vertex() == vertex)
+                {
+                    fim = listaDeVertexCopiados.get(i);
+                    achouFim = true;
+                }
+                if (edge.getStart_vertex() == vertex)
+                {
+                    inicio = listaDeVertexCopiados.get(i);
+                    achouInicio = true;
+                }
+            }
+            if (achouInicio == false || achouFim == false)
+            {
+                System.err.println("ISSO PODE ACONTECER?");
+            }
+            Edge novaEdge = new Edge(inicio,fim);
+            listaDeEdgesCopiadas.add(novaEdge);
+        }
+        
+        this.vertex_list = listaDeVertexCopiados;
+        this.edge_list = listaDeEdgesCopiadas;
+        this.face_list = new ArrayList<>();
+    }
     
     public void refresh(Polygon novaAparencia)
     {
@@ -189,18 +265,18 @@ public class Polygon {
     
     public void adicionarOperacoesGeometricas(Matrix operacaoAplicada)
     {
-        System.out.println("antesDeOperacao = " + operacoes);
-        System.out.println("operacaoAplicada = " + operacaoAplicada);
+        //System.out.println("antesDeOperacao = " + operacoes);
+        //System.out.println("operacaoAplicada = " + operacaoAplicada);
         this.operacoes = operacaoAplicada.multiplicacaoMatrix(this.operacoes);
-        System.out.println("depoisDeOperacao = " + operacoes);
+        //System.out.println("depoisDeOperacao = " + operacoes);
     }
     
     protected void aplicarOperacoesGeometricas()
     {
-        System.out.println("pontos antes da operacao OG : " + this.get3DVertexMatrixDummy());
-        System.out.println("Operacao feita : " + operacoes);
+        //System.out.println("pontos antes da operacao OG : " + this.get3DVertexMatrixDummy());
+        //System.out.println("Operacao feita : " + operacoes);
         this.set3DVertexMatrixDummy( this.operacoes.multiplicacaoMatrix( this.get3DVertexMatrixDummy() ) );
-        System.out.println("pontos depois da Operacao OG :" + this.get3DVertexMatrixDummy());
+        //System.out.println("pontos depois da Operacao OG :" + this.get3DVertexMatrixDummy());
     }
     
     protected void aplicarModificadores()

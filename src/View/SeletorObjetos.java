@@ -33,16 +33,16 @@ public class SeletorObjetos extends javax.swing.JPanel {
      */
     public SeletorObjetos() {
         initComponents();
-        resetTF();
         revalidarComponente();
+        resetTF();
     }
     
     public void update(List< Polygon > poly)
     {
         listaPoligonos.clear();
         listaPoligonos.addAll(poly);
-        resetTF();
         revalidarComponente();
+        resetTF();
     }
     
     public void addPolygon(Polygon poly)
@@ -73,6 +73,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
             rbZPlus.setEnabled(false);
             tfNomePoligono.setText("Sem poligono!");
             btDeletar.setEnabled(false);
+            btResetarOG.setEnabled(false);
         }
         else
         {
@@ -85,6 +86,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
             rbZMinus.setEnabled(true);
             rbZPlus.setEnabled(true);
             btDeletar.setEnabled(true);
+            btResetarOG.setEnabled(true);
             
             poligonoSelecionado = listaPoligonos.get(contador);
             if (contador == 0)
@@ -110,19 +112,35 @@ public class SeletorObjetos extends javax.swing.JPanel {
     
     private void resetTF()
     {
+        if (poligonoSelecionado != null)
+        {
+            tfBevelNumer.setText( Double.toString(poligonoSelecionado.fatorBevel) );
+            tfTwistValorPorSegmento.setText( Double.toString(poligonoSelecionado.fatorTwist ) );
+            tfBendValor.setText( Double.toString( poligonoSelecionado.fatorBend ) );
+            switch (poligonoSelecionado.constanteBend)
+            {
+                case XMinus :
+                    rbXMinus.setSelected(true);
+                    break;
+                case XPlus :
+                    rbXPlus.setSelected(true);
+                    break;
+                case ZMinus :
+                    rbZMinus.setSelected(true);
+                    break;
+                case ZPlus :
+                    rbZPlus.setSelected(true);
+                    break;
+            }
+        }
         tfEscalaX.setText("1.00");
         tfEscalaY.setText("1.00");
         tfEscalaZ.setText("1.00");
         tfTranslacaoX.setText("0.00");
         tfTranslacaoY.setText("0.00");
         tfTranslacaoZ.setText("0.00");
-        tfRotacaoX.setText("0.00");
-        tfRotacaoY.setText("0.00");
-        tfRotacaoZ.setText("0.00");
-        tfBevelNumer.setText("1.00");
-        tfTwistValorPorSegmento.setText("0.00");
-        tfBendValor.setText("0.00");
-        rbXPlus.setSelected(true);
+        tfValorRotacao.setText("0.00");
+        rbXRotacao.setSelected(true);
         if (poligonoSelecionado != null)
         {
             tfNumeroSegmentos.setText( Integer.toString( poligonoSelecionado.segmentos.size() - 1) );
@@ -179,20 +197,26 @@ public class SeletorObjetos extends javax.swing.JPanel {
         Double[] valores = tentarAplicarOperacao(TransformTipo.ROTACAO);
         if (valores != null)
         {
-            Double valorX = valores[0];
-            Double valorY = valores[1];
-            Double valorZ = valores[2];
+            Double valor = valores[0];
             
-            Matrix rotacaoX = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(valorX) );
-            Matrix rotacaoY = new Matrix( Transform_package.TransformationPrimitives.get3DrotateY(valorY) );
-            Matrix rotacaoZ = new Matrix( Transform_package.TransformationPrimitives.get3DrotateZ(valorZ) );
+            Matrix rotacao;
+            if (rbXRotacao.isSelected())
+            {
+                rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(valor) );
+            }
+            else if (rbYRotacao.isSelected())
+            {
+                rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateY(valor) );
+            }
+            else if (rbZRotacao.isSelected())
+            {
+                rotacao = new Matrix( Transform_package.TransformationPrimitives.get3DrotateZ(valor) );
+            }
+            else
+            {
+                throw new IllegalArgumentException("Nenhum dos botoes X/Y/Z precionado!");
+            }
             
-            List< Matrix > lista = new ArrayList<>();
-            lista.add(rotacaoX);
-            lista.add(rotacaoY);
-            lista.add(rotacaoZ);
-            
-            Matrix rotacao = Matrix.concatenacao( lista );
             poligonoSelecionado.adicionarOperacoesGeometricas(rotacao);
             JanelaPrincipal.janela.updateExterno();
             taAvisos.setText("RotacaoFeita!");
@@ -222,9 +246,9 @@ public class SeletorObjetos extends javax.swing.JPanel {
                         valorZ = Double.parseDouble( tfEscalaZ.getText() ); 
                         break;
                     case ROTACAO :
-                        valorX = Math.toRadians( Double.parseDouble( tfRotacaoX.getText() ) );
-                        valorY = Math.toRadians( Double.parseDouble( tfRotacaoY.getText() ) );
-                        valorZ = Math.toRadians( Double.parseDouble( tfRotacaoZ.getText() ) ); 
+                        valorX = Math.toRadians( Double.parseDouble( tfValorRotacao.getText() ) );
+                        valorY = new Double(valorX);
+                        valorZ = new Double(valorX);
                         break;
                     default :
                         throw new IllegalArgumentException();
@@ -281,6 +305,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
     private void initComponents() {
 
         bgBendOpcoes = new javax.swing.ButtonGroup();
+        bgOpcoesRotacao = new javax.swing.ButtonGroup();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         taAvisos = new javax.swing.JTextArea();
@@ -299,13 +324,11 @@ public class SeletorObjetos extends javax.swing.JPanel {
         btTranslacao = new javax.swing.JButton();
         jPanel15 = new javax.swing.JPanel();
         jPanel16 = new javax.swing.JPanel();
-        jLabel19 = new javax.swing.JLabel();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        tfRotacaoX = new javax.swing.JTextField();
-        tfRotacaoY = new javax.swing.JTextField();
-        tfRotacaoZ = new javax.swing.JTextField();
+        tfValorRotacao = new javax.swing.JTextField();
         btRotacao = new javax.swing.JButton();
+        rbXRotacao = new javax.swing.JRadioButton();
+        rbYRotacao = new javax.swing.JRadioButton();
+        rbZRotacao = new javax.swing.JRadioButton();
         jPanel17 = new javax.swing.JPanel();
         jPanel18 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
@@ -336,6 +359,8 @@ public class SeletorObjetos extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         tfNomePoligono = new javax.swing.JTextField();
         btDeletar = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        btResetarOG = new javax.swing.JButton();
 
         setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0), 3));
 
@@ -354,7 +379,9 @@ public class SeletorObjetos extends javax.swing.JPanel {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         btEsquerda.setText("Esquerda");
@@ -454,20 +481,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
 
         jPanel16.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
 
-        jLabel19.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel19.setText("X :");
-
-        jLabel20.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel20.setText("Y :");
-
-        jLabel21.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel21.setText("Z :");
-
-        tfRotacaoX.setText("jTextField1");
-
-        tfRotacaoY.setText("jTextField2");
-
-        tfRotacaoZ.setText("jTextField3");
+        tfValorRotacao.setText("jTextField1");
 
         btRotacao.setText("Aplicar");
         btRotacao.addActionListener(new java.awt.event.ActionListener() {
@@ -476,6 +490,15 @@ public class SeletorObjetos extends javax.swing.JPanel {
             }
         });
 
+        bgOpcoesRotacao.add(rbXRotacao);
+        rbXRotacao.setText("X");
+
+        bgOpcoesRotacao.add(rbYRotacao);
+        rbYRotacao.setText("Y");
+
+        bgOpcoesRotacao.add(rbZRotacao);
+        rbZRotacao.setText("Z");
+
         javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
         jPanel16.setLayout(jPanel16Layout);
         jPanel16Layout.setHorizontalGroup(
@@ -483,39 +506,33 @@ public class SeletorObjetos extends javax.swing.JPanel {
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btRotacao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addComponent(jLabel19)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfRotacaoX, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                    .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addComponent(jLabel21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfRotacaoZ, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                    .addGroup(jPanel16Layout.createSequentialGroup()
-                        .addComponent(jLabel20)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tfRotacaoY, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(btRotacao, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel16Layout.createSequentialGroup()
+                                .addComponent(rbXRotacao)
+                                .addGap(59, 59, 59)
+                                .addComponent(rbYRotacao)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(rbZRotacao))
+                            .addComponent(tfValorRotacao, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE))
+                        .addGap(20, 20, 20))))
         );
         jPanel16Layout.setVerticalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel16Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel19)
-                    .addComponent(tfRotacaoX, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(tfRotacaoY, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(tfRotacaoZ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(rbXRotacao)
+                    .addComponent(rbYRotacao)
+                    .addComponent(rbZRotacao))
+                .addGap(18, 18, 18)
+                .addComponent(tfValorRotacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
                 .addComponent(btRotacao)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel15Layout = new javax.swing.GroupLayout(jPanel15);
@@ -817,6 +834,26 @@ public class SeletorObjetos extends javax.swing.JPanel {
             }
         });
 
+        jPanel6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
+
+        btResetarOG.setText("Resetar Operacoes Geometricas");
+        btResetarOG.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btResetarOGActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btResetarOG, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(btResetarOG, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -833,6 +870,7 @@ public class SeletorObjetos extends javax.swing.JPanel {
                 .addComponent(tfNomePoligono))
             .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -848,7 +886,9 @@ public class SeletorObjetos extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -861,12 +901,14 @@ public class SeletorObjetos extends javax.swing.JPanel {
         // TODO add your handling code here:
         contador++;
         revalidarComponente();
+        resetTF();
     }//GEN-LAST:event_btDireitaActionPerformed
 
     private void btEsquerdaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEsquerdaActionPerformed
         // TODO add your handling code here:
         contador--;
         revalidarComponente();
+        resetTF();
     }//GEN-LAST:event_btEsquerdaActionPerformed
 
     private void btEscalaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEscalaActionPerformed
@@ -1034,23 +1076,35 @@ public class SeletorObjetos extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tfNomePoligonoActionPerformed
 
+    private void btResetarOGActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btResetarOGActionPerformed
+        // TODO add your handling code here:
+        if (poligonoSelecionado != null)
+        {
+            poligonoSelecionado.setOperacoes( new Matrix(Matrix.MATRIXBASICA) );
+            taAvisos.setText("Matrix de operacoes resetada!");
+            if (JanelaPrincipal.janela != null)
+            {
+                JanelaPrincipal.janela.updateExterno();
+            }
+        }
+    }//GEN-LAST:event_btResetarOGActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgBendOpcoes;
+    private javax.swing.ButtonGroup bgOpcoesRotacao;
     private javax.swing.JButton btDeletar;
     private javax.swing.JButton btDireita;
     private javax.swing.JButton btEscala;
     private javax.swing.JButton btEsquerda;
+    private javax.swing.JButton btResetarOG;
     private javax.swing.JButton btRotacao;
     private javax.swing.JButton btTranslacao;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
@@ -1069,14 +1123,18 @@ public class SeletorObjetos extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
     private javax.swing.JRadioButton rbXMinus;
     private javax.swing.JRadioButton rbXPlus;
+    private javax.swing.JRadioButton rbXRotacao;
+    private javax.swing.JRadioButton rbYRotacao;
     private javax.swing.JRadioButton rbZMinus;
     private javax.swing.JRadioButton rbZPlus;
+    private javax.swing.JRadioButton rbZRotacao;
     private javax.swing.JTextArea taAvisos;
     private javax.swing.JTextField tfBendValor;
     private javax.swing.JTextField tfBevelNumer;
@@ -1085,12 +1143,10 @@ public class SeletorObjetos extends javax.swing.JPanel {
     private javax.swing.JTextField tfEscalaZ;
     private javax.swing.JTextField tfNomePoligono;
     private javax.swing.JTextField tfNumeroSegmentos;
-    private javax.swing.JTextField tfRotacaoX;
-    private javax.swing.JTextField tfRotacaoY;
-    private javax.swing.JTextField tfRotacaoZ;
     private javax.swing.JTextField tfTranslacaoX;
     private javax.swing.JTextField tfTranslacaoY;
     private javax.swing.JTextField tfTranslacaoZ;
     private javax.swing.JTextField tfTwistValorPorSegmento;
+    private javax.swing.JTextField tfValorRotacao;
     // End of variables declaration//GEN-END:variables
 }

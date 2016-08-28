@@ -5,6 +5,7 @@
  */
 package Data.Composta_Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +48,7 @@ public class SuperPolygon {
     
     public Polygon getSuperPolygon()
     {
+        //System.out.println("Chamando superPolygon : ");
         if (poligonos == null || poligonos.size() == 0)
         {
             //System.out.println("RETORNO NULO SUPERPOLYGONO");
@@ -55,7 +57,7 @@ public class SuperPolygon {
         Polygon retorno = new Polygon();
         for (Polygon poligono : poligonos)
         {
-            //Polygon copia = new Polygon(poligono);
+            //System.out.println("recebendo poligono : " + poligono.get3DVertexMatrixDummy());
             //copia.aplicarModificadores();
             //copia.aplicarOperacoesGeometricas();
             poligono.aplicarModificadores();
@@ -67,7 +69,9 @@ public class SuperPolygon {
             retorno.vertex_list.addAll(poligono.vertex_list);
             retorno.edge_list.addAll(poligono.edge_list);
             retorno.face_list.addAll(poligono.face_list);
+            //System.out.println("saida tempo : " + retorno.get3DVertexMatrixDummy());
         }
+        //System.out.println("saida final : " + retorno.get3DVertexMatrixDummy());
         //System.out.println("(Em superPoligono) retorno depois de modificadores : " + retorno.get3DVertexMatrixDummy());
         return( retorno );
     }
