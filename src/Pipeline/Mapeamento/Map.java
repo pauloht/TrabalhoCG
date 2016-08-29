@@ -6,6 +6,7 @@
 package Pipeline.Mapeamento;
 import Data.Base_Data.*;
 import Data.Composta_Data.*;
+import View.JanelaPrincipal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,16 @@ import java.util.List;
  */
 public class Map {
     
+    private static int menorPanelX = -1;
+    private static int menorPanelY = -1;
     
+    private static double menorPanelXFinal = 0;
+    private static double menorPanelYFinal = 0;
+    
+    private static double comprimentoXMundo = -1.00;
+    private static double alturaYMundo = -1.00;
+    
+    private static int numeroPanelsInformado = 0;
     
     private double XMax = 0.00;
     private double XMin = 0.00;
@@ -28,6 +38,126 @@ public class Map {
     private double VMin = 0.00;
     
     private static Double valorAjustavel = 0.00;
+    
+    public static synchronized void informarMapeamentoIdeal(int tamanhoXPanel,int tamanhoYPanel,double tamanhoMundoX, double tamanhoMundoY)
+    {
+        //System.out.println("informando tamanhoXPanel = " + tamanhoXPanel + ",tamahoYPanel = " + tamanhoYPanel + ",tamanhoMundoX = " + tamanhoMundoX + ",tamanhoMundoY = " + tamanhoMundoY);
+        informarDimensoesPanel(tamanhoXPanel, tamanhoYPanel);
+        informarDimensoesMaximasMundo(tamanhoMundoX, tamanhoMundoY);
+        if (numeroPanelsInformado == 0)
+        {
+            menorPanelX = -1;
+            menorPanelY = -1;
+            comprimentoXMundo = -1.00;
+            alturaYMundo = -1.00;
+        }
+        incNumeroInformado();
+    }
+    
+    private static void ajustarFinalPanel()
+    {
+            //System.out.println("ComprimentoXMundo = " + comprimentoXMundo + ",AlturaYMundo = " + alturaYMundo + "\nmenorPanelX = " + menorPanelX + ",menorPanelY = " + menorPanelY);
+            Double comprimento = comprimentoXMundo;
+            Double altura = alturaYMundo;
+
+            Double comprimentoNoPanel;
+            Double alturaNoPanel;
+
+            Double comprimentoMaximo = menorPanelX + 0.00;
+            Double alturaMaximo = menorPanelY + 0.00;
+
+            Double sobraNoComprimento;
+            Double sobraNaAltura;
+
+            if (Constantes.aproximador(comprimento) == 0.00)
+            {
+                comprimento = 1.00;
+            }
+
+            if (Constantes.aproximador(altura) == 0.00)
+            {
+                altura = 1.00;
+            }
+
+            Double razaoComprimento = comprimentoMaximo/comprimento;
+            Double razaoAltura = alturaMaximo/altura;
+            Double razaoUsada;
+
+            if (razaoComprimento < razaoAltura)
+            {
+                razaoUsada = razaoComprimento;
+            }
+            else
+            {
+                razaoUsada = razaoAltura;
+            }
+
+            comprimentoNoPanel = comprimento*razaoUsada;
+            alturaNoPanel = altura*razaoUsada;
+
+            sobraNoComprimento = comprimentoMaximo - comprimentoNoPanel;
+            sobraNaAltura = alturaMaximo - alturaNoPanel;
+
+            //System.err.println("Altura = " + altura + "\nComprimento = " + comprimento + "\nrazaoComprimento = " + razaoComprimento + "\nRazaoAltura = " + razaoAltura + "\nRazaoUsada = " + razaoUsada);
+            
+            /*
+            System.out.println("comprimento = " + comprimento + ",altura = " + altura + "\n" +
+                               "No panel comprimentoMaximo = " + comprimentoMaximo + ",Altura maxima = " + alturaMaximo + "\n" +
+                                "No panel comprimento = " + comprimentoNoPanel + ",altura = " + alturaNoPanel + "\n" +
+                                 "Sobra comprimento = " + sobraNoComprimento + ",sobra altura = " + sobraNaAltura);
+            */
+            
+            menorPanelXFinal = comprimentoMaximo - sobraNoComprimento;
+            menorPanelYFinal = alturaMaximo - sobraNaAltura;
+            //System.out.println("menorPanelXFinal = " + menorPanelXFinal + ",menorPanelYFinal" + menorPanelYFinal);
+    }
+    
+    private static synchronized void incNumeroInformado()
+    {
+        numeroPanelsInformado++;
+        //System.out.println("novo valor numeroPanelsInformado = " + numeroPanelsInformado);
+        if (numeroPanelsInformado == 4)
+        {
+            ajustarFinalPanel();
+            if (JanelaPrincipal.janela != null)
+            {
+                JanelaPrincipal.janela.updateFase2();
+            }
+            numeroPanelsInformado = 0;
+        }
+    }
+    
+    private static synchronized void informarDimensoesPanel(int x,int y)
+    {
+        if (x < 0 || y < 0)
+        {
+            throw new IllegalArgumentException("Valores de dimensoes negativas");
+        }
+        if (x < menorPanelX || menorPanelX < 0)
+        {
+            menorPanelX = x;
+        }
+        if (y < menorPanelY || menorPanelY < 0)
+        {
+            menorPanelY = y;
+        }
+    }
+    
+    private static synchronized void informarDimensoesMaximasMundo(double x,double y)
+    {
+        if (x < 0.00 || y < 0.00)
+        {
+            throw new IllegalArgumentException("Valores de dimensoes negativas");
+        }
+        if (x > comprimentoXMundo || comprimentoXMundo < 0.00)
+        {
+            comprimentoXMundo = x;
+        }
+        if (y > alturaYMundo || alturaYMundo < 0.00)
+        {
+            alturaYMundo = y;
+        }
+    }
     
     public Map()
     {
@@ -73,6 +203,34 @@ public class Map {
                 "Matrix de retorno = " + returnmatrix);
         */
         return(returnmatrix);
+    }
+    
+    public Matrix pegarBonsValores(int tamanhoXPanel,int tamanhoYPanel,double centroXMundo, double centroYMundo)
+    {
+        //System.out.println("tamanhoDessePanel(X,Y) = " + tamanhoXPanel + "," + tamanhoYPanel + "\nCentroXMundo = " + centroXMundo + ",CentroYMundo = " + centroYMundo);
+        //System.out.println("ComprimentoXMundo = " + comprimentoXMundo + ",AlturaYMundo = " + alturaYMundo);
+        double sobraVertical = tamanhoYPanel-menorPanelYFinal;
+        double sobraHorizontal = tamanhoXPanel-menorPanelXFinal;
+        
+        double metadeVertical = Math.floor(sobraVertical/2.00);
+        double metadeHorizontal = Math.floor(sobraHorizontal/2.00);
+        VMax = tamanhoYPanel - metadeVertical;
+        VMin = metadeVertical;
+        UMax = tamanhoXPanel - metadeHorizontal;
+        UMin = metadeHorizontal;
+        
+        XMax = centroXMundo + comprimentoXMundo/2.00;
+        XMin = centroXMundo - comprimentoXMundo/2.00;
+        YMax = centroYMundo + alturaYMundo/2.00;
+        YMin = centroYMundo - alturaYMundo/2.00;
+        
+        //System.out.println("sobraVertical = " + sobraVertical + ",SobraHorizontal = " + sobraHorizontal + "\nVMax = " + VMax + ",VMin = " + VMin + ",UMax = " + UMax + ",UMin = " + UMin + "\nYMax = " + YMax + ",YMin = " + YMin + ",XMax = " + XMax + ",XMin = " + XMin);
+        
+        Matrix retorno = getMappingMatrix();
+        
+        //System.out.println("matrix de mapeamento = " + retorno);
+        
+        return( retorno );
     }
     
     /**
@@ -212,6 +370,16 @@ public class Map {
         polyLista.add(polygon);
         return( setNiceParametros(polyLista) );
     }
+
+    public static int getMenorPanelX() {
+        return menorPanelX;
+    }
+
+    public static int getMenorPanelY() {
+        return menorPanelY;
+    }
+    
+    
     
     //<editor-fold defaultstate="collapsed" desc="gettersEsetter">
     

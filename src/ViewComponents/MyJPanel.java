@@ -23,9 +23,17 @@ import java.util.List;
  */
 public class MyJPanel extends JPanel{
     //private final List<Polygon>poly = new ArrayList<>();
-    public Polygon cena;
+    private Polygon cena;
     public String nome = "NomeDefault";
     public Map map = new Map();
+    public Matrix bufferMatrix;
+    
+    private double XCentro = 0.00;
+    private double YCentro = 0.00;
+    private double maiorX = 0.00;
+    private double menorX = 0.00;
+    private double maiorY = 0.00;
+    private double menorY = 0.00;
     
     public boolean mapeamentoAutomatico = true;
     //private fin
@@ -40,13 +48,16 @@ public class MyJPanel extends JPanel{
     public MyJPanel(Polygon algumPolygono)
     {
         super();
+        bufferMatrix = null;
         cena = algumPolygono;
     }
     
-    @Override
-    synchronized public void paint(Graphics g)
+    public void etapa1()
     {
-        super.paint(g);
+        int tamanhoX = 0;
+        int tamanhoY = 0;
+        double distanciaX = 0.00;
+        double distanciaY = 0.00;
         if (cena != null)
         {
             Polygon copia = new Polygon(cena);
@@ -75,11 +86,68 @@ public class MyJPanel extends JPanel{
             //System.out.println("Matrix de projecao = " + tipoProjecao.getMatrix());
             Matrix depoisProjecao = tipoProjecao.getMatrix().multiplicacaoMatrix(copia.get3DVertexMatrixDummy());
             copia.set3DVertexMatrixDummy(depoisProjecao);
-            //operacoesMatriciais.add(tipoProjecao.getMatrix());
-            //System.out.println("depois projecao = " + copia.get3DVertexMatrix());
-
+            bufferMatrix = copia.get3DVertexMatrixDummy();
+            //System.out.println("Eu sou o " + this.nome);
+            //System.out.println("pontos antes de mapeamento -> " + bufferMatrix);
+            calcularExtremosMapeamentoECentro();
+            //System.out.println("CentroX = " + XCentro + ",YCentro = " + YCentro);
+            tamanhoX = this.getSize().width;
+            tamanhoY = this.getSize().height;
+            distanciaX = maiorX-menorX;
+            distanciaY = maiorY-menorY;
+        }
+        Map.informarMapeamentoIdeal(tamanhoX, tamanhoY, distanciaX, distanciaY);
+    }
+    
+    private void calcularExtremosMapeamentoECentro()
+    {
+        Double[][] matrix = bufferMatrix.toRawMatrix();
+        
+        maiorX = matrix[0][0];
+        menorX = matrix[0][0];
+        maiorY = matrix[1][0];
+        menorY = matrix[1][0];
+        double xLocal;
+        double yLocal;
+        for (int j=0;j<matrix[0].length;j++)
+        {
+            xLocal = matrix[0][j];
+            yLocal = matrix[1][j];
+            
+            if (xLocal > maiorX)
+            {
+                maiorX = xLocal;
+            }
+            if (xLocal < menorX)
+            {
+                menorX = xLocal;
+            }
+            if (yLocal > maiorY)
+            {
+                maiorY = yLocal;
+            }
+            if (yLocal < menorY)
+            {
+                menorY = yLocal;
+            }
+        }
+        XCentro = (maiorX+menorX)/2.00;
+        YCentro = (maiorY+menorY)/2.00;
+        //System.out.println("maiorX = " +maiorX + ",menorX = " + menorX + ",maiorY=" + maiorY + ",menorY = " + menorY);
+    }
+    
+    @Override
+    public void paint(Graphics g)
+    {
+        super.paint(g);
+        if (cena != null)
+        {
             if (mapeamentoAutomatico)
             {
+                map.pegarBonsValores(this.getSize().width, this.getSize().height, XCentro, YCentro);
+                
+                
+                /*
                 Double[] medidas;
                 medidas = map.setNiceParametros(copia);
 
@@ -126,12 +194,10 @@ public class MyJPanel extends JPanel{
 
                 //System.err.println("Altura = " + altura + "\nComprimento = " + comprimento + "\nrazaoComprimento = " + razaoComprimento + "\nRazaoAltura = " + razaoAltura + "\nRazaoUsada = " + razaoUsada);
 
-                /*
                 System.out.println("comprimento = " + comprimento + ",altura = " + altura + "\n" +
                                    "No panel comprimentoMaximo = " + comprimentoMaximo + ",Altura maxima = " + alturaMaximo + "\n" +
                                     "No panel comprimento = " + comprimentoNoPanel + ",altura = " + alturaNoPanel + "\n" +
                                      "Sobra comprimento = " + sobraNoComprimento + ",sobra altura = " + sobraNaAltura);
-                */
 
                 map.setUMax( new Double(comprimentoMaximo - Math.floor(sobraNoComprimento/2.00)) );
                 map.setUMin( new Double(Math.floor(sobraNoComprimento/2.00)) );
@@ -143,15 +209,16 @@ public class MyJPanel extends JPanel{
                 }
                 map.setVMax( new Double(this.getSize().height - Math.floor(sobraNaAltura/2.00)) );
                 map.setVMin( new Double(Math.floor(sobraNaAltura/2.00)) );
+                */
+                
+                
             }
             Matrix operacaoMapeamento = map.getMappingMatrix();
             //System.out.println("matrix de mapeamento = " + operacaoMapeamento);
-            operacoesMatriciais.add(operacaoMapeamento);
-            Matrix depois_mapeamento = operacaoMapeamento.multiplicacaoMatrix( copia.get3DVertexMatrixDummy() );
+            Matrix depois_mapeamento = operacaoMapeamento.multiplicacaoMatrix( bufferMatrix );
             //System.out.println("No panel " + nome + " depois do mapeamento = " + depois_mapeamento);
 
-            Matrix concatenada = Matrix.concatenacao(operacoesMatriciais);
-
+            Polygon copia = new Polygon(cena);
             copia.set3DVertexMatrixDummy(depois_mapeamento);
             //copia.set3DVertexMatrix(concatenada);
             
@@ -210,6 +277,12 @@ public class MyJPanel extends JPanel{
             }
             JanelaPrincipal.foiFeitoRepaint(this);
         }
+    }
+    
+    public void setPolygon(Polygon poly)
+    {
+        bufferMatrix = null;
+        this.cena = poly;
     }
     
     @Override

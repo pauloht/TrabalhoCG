@@ -97,6 +97,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
         pTopL = new MyJPanel(cena);
         pTopL.setBackground(Color.GRAY);
+        pTopL.nome = "Top Left";
         pTopL.tipoProjecao = ProjecaoEnum.FRONTAL;
         
         pMMTopL.setLayout(null);
@@ -105,6 +106,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
         pBottomL = new MyJPanel(cena);
         pBottomL.setBackground(Color.GRAY);
+        pBottomL.nome = "Bottom Left";
         pBottomL.tipoProjecao = ProjecaoEnum.TOP;
         
         pMMBottomL.setLayout(null);
@@ -113,6 +115,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
         pTopR = new MyJPanel(cena);
         pTopR.setBackground(Color.GRAY);
+        pTopR.nome = "Top Right";
         pTopR.tipoProjecao = ProjecaoEnum.SIDE;
         
         pMMTopR.setLayout(null);
@@ -121,6 +124,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         
         pBottomR = new MyJPanel(cena);
         pBottomR.setBackground(Color.GRAY);
+        pBottomR.nome = "Bottom Right";
         pBottomR.tipoProjecao = ProjecaoEnum.PERSPERCTIVE;
         
         pMMBottomR.setLayout(null);
@@ -143,7 +147,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         planoPanel.setSize(pParaPlanos.getSize());
         seletorObjetos.addPolygon(polyLista);
         resetarJanelaAdicionarObjetoTF();
-        update();
+        updateFase1();
         this.setVisible(true);
         this.revalidate();
     }
@@ -178,21 +182,17 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         }
     } 
            
-    
-    /**
-     * Update de visao de acordo com parametros(camera,projecao,mapeamento,etc)
-     */
-    private void update()
+    private void updateFase1()
     {
         if (painelSelecionado != null)
         {
             painelSelecionado.setBackground(Color.RED);
         }
         Polygon cena = scene.getSuperPolygon();
-        pTopR.cena = cena;
-        pTopL.cena = cena;
-        pBottomR.cena = cena;
-        pBottomL.cena = cena;
+        pTopR.setPolygon(cena);
+        pTopL.setPolygon(cena);
+        pBottomR.setPolygon(cena);
+        pBottomL.setPolygon(cena);
         
         lbBottomL.setText(pBottomL.tipoProjecao.toString());
         lbBottomR.setText(pBottomR.tipoProjecao.toString());
@@ -241,7 +241,18 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         }
         carregarCamera();
         planoPanel.update();
-        
+        pTopR.etapa1();
+        pTopL.etapa1();
+        pBottomR.etapa1();
+        pBottomL.etapa1();
+    }
+    
+    /**
+     * Update de visao de acordo com parametros(camera,projecao,mapeamento,etc)
+     */
+    public void updateFase2()
+    {
+        //System.out.println("---chamando etapa 2-----");
         pTopR.repaint();
         pTopL.repaint();
         pBottomR.repaint();
@@ -251,12 +262,12 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     
     public void updateExterno()
     {
-        update();
+        updateFase1();
     }
     
     public void updateExternoPoligono()
     {
-        update();
+        updateFase1();
         seletorObjetos.update(scene.getPoligonos());
     }
     
@@ -1230,13 +1241,13 @@ public class JanelaPrincipal extends javax.swing.JFrame {
     private void btEsquerdaPlanoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEsquerdaPlanoActionPerformed
         // TODO add your handling code here:
         contadorPainelSelecionado--;
-        update();
+        updateFase1();
     }//GEN-LAST:event_btEsquerdaPlanoActionPerformed
 
     private void btDireitaPlanoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDireitaPlanoActionPerformed
         // TODO add your handling code here:
         contadorPainelSelecionado++;
-        update();
+        updateFase1();
     }//GEN-LAST:event_btDireitaPlanoActionPerformed
 
     private void btCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCriarActionPerformed
@@ -1453,7 +1464,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             scene.addPolygon(real);
             tfAvisosCriarObjeto.setText("Adicionado!");
             seletorObjetos.update(scene.getPoligonos());
-            update();
+            updateFase1();
         }
         catch(Exception e)
         {

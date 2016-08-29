@@ -296,15 +296,15 @@ public class PolygonGenerator {
         Matrix depoisOperacoes = finalMatrix.multiplicacaoMatrix(retorno.get3DVertexMatrixDummy());
         retorno.set3DVertexMatrixRoot(depoisOperacoes);
         //System.out.println("FINAL = " + retorno.get3DVertexMatrix());
-        Vertex C = retorno.vertex_list.get(2);
+        //Vertex C = retorno.vertex_list.get(2);
         
-        System.out.println("BASE ROOT = " + retorno.get3DVertexMatrixRoot());
-        System.out.println("BASE MVOEL = " +  retorno.get3DVertexMatrixDummy());
+        //System.out.println("BASE ROOT = " + retorno.get3DVertexMatrixRoot());
+        //System.out.println("BASE MVOEL = " +  retorno.get3DVertexMatrixDummy());
         
-        System.out.println("Distancia AB = " + Vertex.distanciaEntreDoisVetores(A, B));
-        System.out.println("Distancia BC = " + Vertex.distanciaEntreDoisVetores(B, C));
-        System.out.println("Distancia CA = " + Vertex.distanciaEntreDoisVetores(C, A));
-        System.out.println("CG = " + retornoCG);
+        //System.out.println("Distancia AB = " + Vertex.distanciaEntreDoisVetores(A, B));
+        //System.out.println("Distancia BC = " + Vertex.distanciaEntreDoisVetores(B, C));
+        //System.out.println("Distancia CA = " + Vertex.distanciaEntreDoisVetores(C, A));
+        //System.out.println("CG = " + retornoCG);
         
         return(retorno);
     }

@@ -47,10 +47,10 @@ public class Blend {
                     rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateZ(-valorEmRadianosBend*(i+1)) );
                     break;
                 case ZMinus :
-                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(valorEmRadianosBend*(i+1)) );
+                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(-valorEmRadianosBend*(i+1)) );
                     break;
                 case ZPlus :
-                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(-valorEmRadianosBend*(i+1)) );
+                    rotacaoBend = new Matrix( Transform_package.TransformationPrimitives.get3DrotateX(+valorEmRadianosBend*(i+1)) );
                     break;
                 default : 
                     throw new IllegalArgumentException();
