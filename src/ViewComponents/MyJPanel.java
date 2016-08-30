@@ -96,7 +96,7 @@ public class MyJPanel extends JPanel{
             distanciaX = maiorX-menorX;
             distanciaY = maiorY-menorY;
         }
-        Map.informarMapeamentoIdeal(tamanhoX, tamanhoY, distanciaX, distanciaY);
+        Map.informarMapeamentoIdeal(tamanhoX, tamanhoY, distanciaX, distanciaY,mapeamentoAutomatico);
     }
     
     private void calcularExtremosMapeamentoECentro()

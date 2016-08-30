@@ -39,11 +39,14 @@ public class Map {
     
     private static Double valorAjustavel = 0.00;
     
-    public static synchronized void informarMapeamentoIdeal(int tamanhoXPanel,int tamanhoYPanel,double tamanhoMundoX, double tamanhoMundoY)
+    public static synchronized void informarMapeamentoIdeal(int tamanhoXPanel,int tamanhoYPanel,double tamanhoMundoX, double tamanhoMundoY,boolean deveCalcular)
     {
         //System.out.println("informando tamanhoXPanel = " + tamanhoXPanel + ",tamahoYPanel = " + tamanhoYPanel + ",tamanhoMundoX = " + tamanhoMundoX + ",tamanhoMundoY = " + tamanhoMundoY);
-        informarDimensoesPanel(tamanhoXPanel, tamanhoYPanel);
-        informarDimensoesMaximasMundo(tamanhoMundoX, tamanhoMundoY);
+        if (deveCalcular)
+        {
+            informarDimensoesPanel(tamanhoXPanel, tamanhoYPanel);
+            informarDimensoesMaximasMundo(tamanhoMundoX, tamanhoMundoY);
+        }
         if (numeroPanelsInformado == 0)
         {
             menorPanelX = -1;
