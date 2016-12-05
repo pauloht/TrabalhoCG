@@ -5,34 +5,45 @@
  */
 package Data.Base_Data;
 
+import java.util.List;
+
 /**
  *
  * @author Paulo.Tenorio
  */
 public class Face {
-    Edge edge;
+    List< Edge > edge_list;
     public Face()
     {
-        edge = null;
+        edge_list = null;
     }
     
-    public Face(Edge edge)
+    public Face(List< Edge > edge)
     {
-        this.edge = edge;
+        this.edge_list = edge;
     }
     
-    public Edge getEdge()
+    public List< Edge > getEdgeList()
     {
-        return(edge);
+        return(edge_list);
     }
     
-    public void setEdge(Edge to_set)
+    public void setEdge(List< Edge > to_set)
     {
-        edge = to_set;
+        edge_list = to_set;
     }
     
-    public void printMe()
+    public StringBuilder printMe()
     {
-        System.out.print("Ainda tem que implementar printMe() em face, deal with it :DDD");
+        StringBuilder sb = new StringBuilder();
+        int contador = 0;
+        for (Edge edge : edge_list)
+        {
+            sb.append("Edge " + contador + " : \n");
+            sb.append( edge.printMe() );
+            sb.append("\n");
+            contador++;
+        }
+        return(sb);
     }
 }

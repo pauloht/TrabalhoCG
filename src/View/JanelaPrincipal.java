@@ -189,6 +189,11 @@ public class JanelaPrincipal extends javax.swing.JFrame {
             painelSelecionado.setBackground(Color.RED);
         }
         Polygon cena = scene.getSuperPolygon();
+        
+        System.out.println("EM UPDATA FASE 1");
+        if (cena!=null)
+        cena.printME();
+        
         pTopR.setPolygon(cena);
         pTopL.setPolygon(cena);
         pBottomR.setPolygon(cena);
@@ -830,7 +835,7 @@ public class JanelaPrincipal extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(seletorObjetos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(seletorObjetos, javax.swing.GroupLayout.PREFERRED_SIZE, 551, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 172, Short.MAX_VALUE))
         );
 

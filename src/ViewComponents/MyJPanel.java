@@ -13,6 +13,8 @@ import Pipeline.CameraPacote.CameraClass;
 import Pipeline.Mapeamento.Map;
 import Pipeline.Projecao.ProjecaoEnum;
 import View.JanelaPrincipal;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,9 @@ public class MyJPanel extends JPanel{
     public String nome = "NomeDefault";
     public Map map = new Map();
     public Matrix bufferMatrix;
+    
+    private Color[][] zBufferColor;
+    private pauloDraw moduloDeDesenho;
     
     private double XCentro = 0.00;
     private double YCentro = 0.00;
@@ -43,11 +48,13 @@ public class MyJPanel extends JPanel{
     public MyJPanel()
     {
         super();
+        moduloDeDesenho = new pauloDraw(this);
     }
     
     public MyJPanel(Polygon algumPolygono)
     {
         super();
+        moduloDeDesenho = new pauloDraw(this);
         bufferMatrix = null;
         cena = algumPolygono;
     }
@@ -58,9 +65,14 @@ public class MyJPanel extends JPanel{
         int tamanhoY = 0;
         double distanciaX = 0.00;
         double distanciaY = 0.00;
+        
         if (cena != null)
         {
+            System.out.println("REALIZANDO COPIA EM " + nome);
             Polygon copia = new Polygon(cena);
+            
+            //System.out.println("EM COPIA ");
+            //copia.printME();
             //System.out.println("REPAINT");
             //System.out.println("REDESENHANDO");
             //System.out.println("Dimension = " + this.getSize());
@@ -142,6 +154,7 @@ public class MyJPanel extends JPanel{
         super.paint(g);
         if (cena != null)
         {
+            moduloDeDesenho.reloadPanel();
             if (mapeamentoAutomatico)
             {
                 map.pegarBonsValores(this.getSize().width, this.getSize().height, XCentro, YCentro);
@@ -213,68 +226,91 @@ public class MyJPanel extends JPanel{
                 
                 
             }
+            BufferedImage img = new BufferedImage(this.getSize().width,this.getSize().height,BufferedImage.TYPE_INT_ARGB);
+            
             Matrix operacaoMapeamento = map.getMappingMatrix();
             //System.out.println("matrix de mapeamento = " + operacaoMapeamento);
             Matrix depois_mapeamento = operacaoMapeamento.multiplicacaoMatrix( bufferMatrix );
             //System.out.println("No panel " + nome + " depois do mapeamento = " + depois_mapeamento);
 
             Polygon copia = new Polygon(cena);
+            
+            /*
+            System.out.println("APAGAR DPS");
+            int contadorX = 0;
+            for (Face face : copia.face_list)
+            {
+                System.out.println("Face " + contadorX + " : ");
+                face.printMe();
+                contadorX++;
+            }
+            */
+            
             copia.set3DVertexMatrixDummy(depois_mapeamento);
             //copia.set3DVertexMatrix(concatenada);
             
             //System.out.println("Copia = " + copia.get3DVertexMatrix());
-            int x1,y1,x2,y2;
+            double x1,y1,x2,y2;
+            moduloDeDesenho.drawPoly(copia);
+            if (zBufferColor!=null)
+            {
+                for (int i=0;i<zBufferColor.length;i++)
+                {
+                    if (zBufferColor[0]!=null)
+                    {
+                        for (int j=0;j<zBufferColor[0].length;j++)
+                        {
+                            if (zBufferColor[i][j]!=null)
+                            img.setRGB(i, j, zBufferColor[i][j].getRGB());
+                            else
+                            {
+                                System.out.println("erro em = " + i + "," + j);
+                            }
+                        }
+                    }
+
+                }
+            }
+            g.drawImage(img, 0, 0, this);
+            /*
             if (copia.edge_list != null)
             {
                 for (Edge edge : copia.edge_list)
                 {
-                    x1 = edge.getStart_vertex().getPosXDummy().intValue();
+                    x1 = edge.getStart_vertex().getPosXDummy();
 
-                    if (x1 == 0)
-                    {
-                        x1 = 1;
-                    }
-                    if (x1 == this.getSize().width)
-                    {
-                        x1 = this.getSize().width-1;
-                    }
+                    y1 = edge.getStart_vertex().getPosYDummy();
 
-                    y1 = edge.getStart_vertex().getPosYDummy().intValue();
-                    if (y1 == 0)
-                    {
-                        y1 = 1;
-                    }
-                    if (y1 == this.getSize().height)
-                    {
-                        y1 = this.getSize().height-1;
-                    }
+                    x2 = edge.getEnd_vertex().getPosXDummy();
 
-                    x2 = edge.getEnd_vertex().getPosXDummy().intValue();
-                    if (x2 == 0)
-                    {
-                        x2 = 1;
-                    }
-                    if (x2 == this.getSize().width)
-                    {
-                        x2 = this.getSize().width-1;
-                    }
-
-                    y2 = edge.getEnd_vertex().getPosYDummy().intValue();
-
-                    if (y2 == 0)
-                    {
-                        y2 = 1;
-                    }
-                    if (y2 == this.getSize().height)
-                    {
-                        y2 = this.getSize().height-1;
-                    }
+                    y2 = edge.getEnd_vertex().getPosYDummy();
 
                     //System.out.println("x1 = " + x1 + ",y1 = " + y1 + ",x2 = " + x2 + ",y2 = " + y2);
-                    g.drawLine(x1, y1, x2, y2);
+                    moduloDeDesenho.drawLine(x1, y1, x2, y2);
+                    if (zBufferColor!=null)
+                    {
+                        for (int i=0;i<zBufferColor.length;i++)
+                        {
+                            if (zBufferColor[0]!=null)
+                            {
+                                for (int j=0;j<zBufferColor[0].length;j++)
+                                {
+                                    if (zBufferColor[i][j]!=null)
+                                    img.setRGB(i, j, zBufferColor[i][j].getRGB());
+                                    else
+                                    {
+                                        System.out.println("erro em = " + i + "," + j);
+                                    }
+                                }
+                            }
 
+                        }
+                    }
+                    System.out.println("MATRIZ DE DESENHO : ");
+                    g.drawImage(img, 0, 0, this);
                 }
             }
+            */
             JanelaPrincipal.foiFeitoRepaint(this);
         }
     }
@@ -283,6 +319,10 @@ public class MyJPanel extends JPanel{
     {
         bufferMatrix = null;
         this.cena = poly;
+    }
+
+    public void setzBufferColor(Color[][] zBufferColor) {
+        this.zBufferColor = zBufferColor;
     }
     
     @Override

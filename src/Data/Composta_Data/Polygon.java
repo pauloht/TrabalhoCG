@@ -134,6 +134,10 @@ public class Polygon {
     //versao copia teste, supostastamente é melhor que outra pois nao tem problemas com vertex identicos
     public Polygon( Polygon outro)
     {
+        //StringBuilder saida = new StringBuilder();
+        //saida.append("Original do polygono ").append(outro.nome).append(": \n");
+        //saida.append(outro.printME());
+        //saida.append("Fim impresao do poligono" + outro.nome + "\n");
         if (outro.operacoes != null)
         {
             operacoes = new Matrix(outro.operacoes);
@@ -160,7 +164,7 @@ public class Polygon {
         {
             this.alvo = null;
         }
-        
+        //saida.append("DERP1\n");
         List< Vertex > listaDeVertexCopiados = new ArrayList<>();
         List< Vertex > listaDeVertex = new ArrayList<>();
         List< Edge > listaDeEdgesCopiadas = new ArrayList<>();
@@ -205,9 +209,54 @@ public class Polygon {
             listaDeEdgesCopiadas.add(novaEdge);
         }
         
+        //saida.append("DERP2\n");
+        
+        List< Face > novasFaces = new ArrayList<>();
+        int contador = 0;
+        //saida.append("numero faces : " + outro.face_list.size()+"\n");
+        
+        //saida.append("Lista de edges : \n");
+        
+        /*
+        int contador2 = 0;
+        for (Edge edge : outro.edge_list)
+        {
+            saida.append(contador2).append("->").append(edge.printMe());
+            contador2++;
+        }
+        */
+        
+        for (Face face : outro.face_list)
+        {
+            /*
+            saida.append("Face edge lista : \n");
+            for (Edge edge : face.getEdgeList())
+            {
+                saida.append(edge.printMe());
+            }
+            */
+            List< Edge > edgesRelacionadas = new ArrayList<>();
+            FaceExtra faceAux = new FaceExtra(face);
+            faceAux.setCorrespondencia(outro.edge_list);
+            List< Integer > edgesAssociadasAFace = faceAux.getVetorAux();
+            //saida.append("associadas a face " + contador + "= " + edgesAssociadasAFace+"\n");
+            for (Integer valor : edgesAssociadasAFace)
+            {
+                edgesRelacionadas.add( listaDeEdgesCopiadas.get(valor) );
+            }
+            Face novaFace = new Face(edgesRelacionadas);
+            novasFaces.add(novaFace);
+            contador++;
+        }
         this.vertex_list = listaDeVertexCopiados;
         this.edge_list = listaDeEdgesCopiadas;
-        this.face_list = new ArrayList<>();
+        this.face_list = novasFaces;
+        
+        //saida.append("\n\n");
+        
+        //System.out.println(saida);
+        //System.out.println("Nova copia : ");
+        //this.printME();
     }
     
     public void refresh(Polygon novaAparencia)
@@ -256,9 +305,9 @@ public class Polygon {
     //fim metodos relacionados a edges
     
     //metodos relacionados a faces
-    public void addFace(Edge edge)
+    public void addFace(List edgeList)
     {
-        Face new_face = new Face(edge);
+        Face new_face = new Face(edgeList);
         face_list.add(new_face);
     }
     //fim metodos relacionados a faces
@@ -271,7 +320,7 @@ public class Polygon {
         //System.out.println("depoisDeOperacao = " + operacoes);
     }
     
-    protected void aplicarOperacoesGeometricas()
+    public void aplicarOperacoesGeometricas()
     {
         //System.out.println("pontos antes da operacao OG : " + this.get3DVertexMatrixDummy());
         //System.out.println("Operacao feita : " + operacoes);
@@ -520,6 +569,25 @@ public class Polygon {
     
     public Matrix getOperacoes() {
         return operacoes;
+    }
+    
+    public StringBuilder printME()
+    {
+        StringBuilder sb = new StringBuilder();
+        int contador = 0;
+        sb.append("--------------------------------\n");
+        sb.append("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n\n");
+        for (Face face : this.face_list)
+        {
+            sb.append("\n----\n");
+            sb.append("Face " + contador + " : \n");
+            sb.append(face.printMe());
+            sb.append("----\n\n");
+            contador++;
+        }
+        sb.append("\nxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n");
+        sb.append("----------------------------------\n");
+        return(sb);
     }
     
     //</editor-fold>

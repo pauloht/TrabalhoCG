@@ -275,6 +275,10 @@ public class PolygonGenerator {
         }
         Edge ba = new Edge(ultimoVertex,a);
         edgeLista.add(ba);
+        
+        Face faceUnica = new Face(edgeLista);
+        faceLista.add(faceUnica);
+        
         retorno = new Polygon(vertexLista,edgeLista,faceLista);
         retorno.setBase( new Polygon(retorno) );
         

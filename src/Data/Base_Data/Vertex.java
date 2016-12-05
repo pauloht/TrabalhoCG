@@ -62,9 +62,11 @@ public class Vertex {
         edge = to_set;
     }
     
-    public void printMe()
+    public StringBuilder printMe()
     {
-        System.out.print("("+pos_x+","+pos_y+","+pos_z+")");
+        StringBuilder sb = new StringBuilder();
+        sb.append("("+pos_x+","+pos_y+","+pos_z+")");
+        return(sb);
     }
 
     public Double getPosXDummy() {

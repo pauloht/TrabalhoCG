@@ -6,6 +6,7 @@
 package Generator;
 
 import Data.Base_Data.Edge;
+import Data.Base_Data.Face;
 import Data.Base_Data.Matrix;
 import Data.Base_Data.Vertex;
 import Data.Composta_Data.Polygon;
@@ -45,7 +46,11 @@ public class Extrusao {
             }
             //System.out.println("base = " + base.get3DVertexMatrix());
             //System.out.println("extrusao começo = ");
-            //System.out.println(extrusao.get3DVertexMatrix());
+            //System.out.println(extrusao.get3DVertexMatrixRoot());
+            
+            //MOTIVO DE REMOCAO
+            //Aparentemente apenas gera novas edges e conecta aos vertices, mas tais edges ja sao gerados ao gerar construtor de copia
+            /*
             for (int i=0;i<base.vertex_list.size();i++)
             {
                 Vertex vertexComeço;
@@ -61,16 +66,33 @@ public class Extrusao {
                 Edge novaEdge = new Edge(vertexComeço,vertexFim);
                 baseLocal.edge_list.add(novaEdge);
             }
+            */
             Matrix translacaoMatrix = new Matrix( Transform_package.TransformationPrimitives.get3Dtranslate(translacaoXParcial, translacaoYParcial, translacaoZParcial) );
             Matrix depoisTranslacao = translacaoMatrix.multiplicacaoMatrix(extrusao.get3DVertexMatrixRoot());
             //System.out.println("depoisTranslacao matrix = " + depoisTranslacao);
             extrusao.set3DVertexMatrixRoot(depoisTranslacao);
-            //System.out.println("extrusaodepois translacao = " + extrusao.get3DVertexMatrix());
+            //System.out.println("extrusaodepois translacao = " + extrusao.get3DVertexMatrixRoot());
             extrusao.nome = "ExtrusaoNumero " + Integer.toString(j);
             extrusao.cg = extrusao.calculateCG();
+            
+            //extrusao.face_list.get(0).printMe();
+            
             retorno.segmentos.add(extrusao);
             retorno.vertex_list.addAll(extrusao.vertex_list);
             retorno.edge_list.addAll(extrusao.edge_list);
+            retorno.face_list.addAll(extrusao.face_list);
+            
+            /*
+            System.out.println("apagar dps 2 ");
+            int contadorZ = 0;
+            for (Face face : retorno.face_list)
+            {
+                System.out.println("Face " + contadorZ + " : ");
+                face.printMe();
+                contadorZ++;
+            }
+            */
+            
             //baseLocal = extrusao;
             //System.out.println("Extrusao : " + extrusao.nome);
             //System.out.println("pontos : " + extrusao.get3DVertexMatrix());

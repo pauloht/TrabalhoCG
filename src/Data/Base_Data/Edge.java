@@ -90,12 +90,14 @@ public class Edge {
         this.edge4 = edge4;
     }
     
-    public void printMe()
+    public StringBuilder printMe()
     {
-        System.out.print("Edge[");
-        start_vertex.printMe();
-        System.out.print("]->[");
-        end_vertex.printMe();
-        System.out.print("]");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Edge[");
+        sb.append(start_vertex.printMe());
+        sb.append("]->[");
+        sb.append(end_vertex.printMe());
+        sb.append("]\n");
+        return(sb);
     }
 }
